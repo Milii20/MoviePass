@@ -1,0 +1,104 @@
+table, th, td {
+    border: 1px solid black;
+}
+
+    .cinecs {
+        width:750px;
+        border: 5px outset #e00e6f;
+        background-color: rgb(112 220 84 / 50%);
+        position: relative;
+        margin-left: auto;
+        margin-right: auto;
+
+}
+
+    .cinemacs {
+        width: 500px;
+        border: 4px outset #17bb14;
+        background-color: rgb(158 209 243);
+        position: center;
+        margin-left: auto;
+        margin-right: auto;
+      
+}
+    .funcioncs {
+        width: 420px;
+        border: 3px outset #35b7cc;
+        background-color: rgb(245 180 228);
+        position: center;
+        margin-left: auto;
+        margin-right: auto;
+    
+    }
+    .mensaje {
+        width: 500px;
+        border: 4px outset #bbb614;
+        background-color: rgb(230 251 148);
+        position: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .cuerpo1 {
+        width: 500px;
+        border: 4px outset #bb7814;
+        background-color: rgb(204 198 31);
+        position: center;
+        margin-left: auto;
+        margin-right: auto;
+          
+    }
+    .cuerpo2 {
+        width: 700px;
+        border: 4px outset #610388;
+        background-color: rgb(182 134 197);
+        position: center;
+        margin-left: auto;
+        margin-right: auto;
+          
+    }
+    .resena {
+        width: 600px;
+        border: 4px outset #bc6ade;
+        background-color: rgb(226 194 236);
+        position: center;
+        margin-left: auto;
+        margin-right: auto;
+          
+    }
+    .menuprincipal {
+        width: 300px;
+        border: 4px outset #6ade88;
+        background-color: rgb(194 236 205);
+        position: center;
+        margin-left: auto;
+        margin-right: auto;
+          
+    }
+    .login {
+        width: 300px;
+        border: 4px outset #e24141;
+        background-color: rgb(214 136 136);
+        position: center;
+        margin-left: auto;
+        margin-right: auto;
+          
+    }
+    .cuerpochico {
+        width: 300px;
+        border: 4px outset #e24141;
+        background-color: rgb(214 136 136);
+        position: center;
+        margin-left: auto;
+        margin-right: auto;
+          
+    }
+    .container {
+    width: 500px;
+    height: 100px;
+    background-color: green;
+    position: relative;
+}
+
+* {
+    text-align: center;
+}
