@@ -81,7 +81,7 @@
         }
         
         echo "</select>";
-
+        
         echo '<button  type="submit" name="btnLogin" value='.$peli["id"].".".$id.'>Agregar Funcion</button>';
         echo '</form>';            
         //echo "<br>---------------------------------------------------------------------------------------<br>";

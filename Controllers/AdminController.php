@@ -15,6 +15,12 @@ Class AdminController
     private $cineDAO;
     private $message = "";
     private $movieDB;
+    //testing si anda el filtro de session
+    private $type = "admin";
+    public function getType()
+    {
+        return $this->type;
+    }
     public function __construct()
     {
         $this->movieDB = new moviedb();
@@ -95,6 +101,10 @@ Class AdminController
     public function crearFuncion($dia, $mes, $anio, $hora, $minuto, $ids) //falta verificacion para que la fecha sea posterior al dia de hoy
     {
         $funcion=new funcion();
+        // DEBUG SI YA ESTA EN ALGUN CINE CON EXCEPCION DEL ACTUAL EN EL MISMO DIA, NO DEJAR AGREGAR LA PELI, COMENTAR QUE YA ESTA EN OTRO CINE
+        // DEBUG SI LA FECHA ES ANTERIOR A LA FECHA ACTUAL, O POSTERIOR POR MENOS DE 15 MINUTOS, NO DEJAR AGREGAR LA PELI
+        // DEBUG EN CUALQUIER CASO VOLVER A SHOWAGREGARPELI
+        // DEBUG VERIFICAR QUE EL ORDEN DE LAS FUNCIONES NO SE CHOQUEN, SI HAY UNA FUNCION DE 1 A 2 PM, QUE LA PROXIMA EMPIECE 2:15 A 3:15, Y LA SIGUIENTE 3:30 A 4:30 Y ASI
         $array=explode(".",$ids);
         $funcion->setIdPelicula($array[0]);
         $funcion->setIdCinema($array[1]);

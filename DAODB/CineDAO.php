@@ -1,5 +1,6 @@
 <?php
 //contiene alta, baja, modificacion y consulta de Cines, que contienen cinemas, que contienen funciones
+// SEPARAR EN MULTIPLES Y CREAR INTERFACE IDB O IDAODB
 //pero en DB
 namespace DAODB;
     use DAODB\DBGen as DBGen;
@@ -44,6 +45,7 @@ namespace DAODB;
             $arrayAux['fecha'] = $funcion->getFecha();
             $arrayAux['hora'] = $funcion->getHora();
             $arrayAux['asientos'] = $funcion->getArrayAsientosAsJson();
+            //$arrayAux['generos'] = $funcion->getArrayGenerosAsJson(); //DEBUG
             return $arrayAux;
         }
         private function toArrayParamCine()
@@ -79,6 +81,7 @@ namespace DAODB;
             array_push($arrayAux, "fecha");
             array_push($arrayAux, "hora");
             array_push($arrayAux, "asientos");
+            //array_push($arrayAux, "generos");  //DEBUG
             return $arrayAux;
         }
         private function toArrayValueCine($cine)

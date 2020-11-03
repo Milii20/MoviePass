@@ -6,7 +6,19 @@
 require_once(VIEWS_PATH."message.php");$i=0;
 if(!empty($listaPelis))
 {
-
+    
+    echo "<div class=filtrogrande>";
+    echo "<div class=filtro2>";
+    echo '<form action='.FRONT_ROOT.'Client/filtrarPelisPorFecha  method="post">';
+    echo '<button  type="submit" name="btnLogin">Filtrar Peliculas por Fecha</button>';
+    echo '</form>';  
+    echo "</div>";
+    echo "<div class=filtro2>";
+    echo '<form action='.FRONT_ROOT.'Client/filtrarPelisPorGenero  method="post">';
+    echo '<button  type="submit" name="btnLogin">Filtrar Peliculas por Genero</button>';
+    echo '</form>';  
+    echo "</div>";
+    echo "</div>";
     foreach ($listaPelis as $peli)
     {
         

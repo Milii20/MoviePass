@@ -9,6 +9,7 @@ use Models\Funcion as Funcion;
 use Models\User as User;
 use utilities\moviedb as moviedb;
 use utilities\Luhn as Luhn;
+use utilities\Calendar as Calendar;
 Class ClientController
 {
     private $cineDAO;
@@ -19,6 +20,12 @@ Class ClientController
     private $seleccionados;
     private $costoTotal;
     private $cantAsientos;
+    //testing si anda el filtro de session
+    private $type = "client";
+    public function getType()
+    {
+        return $this->type;
+    }
     public function __construct()
     {
         $this->movieDB = new moviedb();
@@ -60,7 +67,14 @@ Class ClientController
         foreach($listaFunciones as $funcion)
         {
             $listaCinema=$this->cineDAO->getCinemaById($funcion->getIdCinema());
-            array_push($listaPelis,$this->movieDB->getById($funcion->getIdPelicula()));
+            if(Calendar::comparaFechasYHoras(date("d.m.Y"),(Calendar::transformaFechaYHora($funcion->getFecha(),$funcion->getHora()))))
+            {
+                //no la muestro, la ignoro porque ya paso la funcion
+            }
+            else
+            {
+                array_push($listaPelis,$this->movieDB->getById($funcion->getIdPelicula()));
+            }
         }
         require_once(VIEWS_PATH."FormElegirPelicula.php");
         } 

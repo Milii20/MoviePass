@@ -11,6 +11,12 @@
     {
         private $userDAO;
         private $message = "";
+        //testing si anda el filtro de session
+        private $type = "home";
+        public function getType()
+        {
+            return $this->type;
+        }
         public function __construct()
         {
             $this->userDAO = new UserDAO();

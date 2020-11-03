@@ -109,7 +109,7 @@ Class moviedb
            //echo $peli["overview"].'<br>';
         }*/
     }
-    public function getAllGenres()
+    public function getAllGenres()  // DEBUG
     {
         $res2=file_get_contents('https://api.themoviedb.org/3/genre/movie/list?api_key='.KEY.'&language=es-ES'); 
         echo $res2;
@@ -124,18 +124,11 @@ Class moviedb
     public function getPortrait($peli)
     {
         $res="";
-        //try
-        //{
         $imgJson= json_decode(@file_get_contents('https://api.themoviedb.org/3/movie/'.$peli["id"].'/images?api_key='.KEY),true);
         
         
             if ($imgJson['posters']!=null)
             $res= $imgJson['posters'][0]["file_path"];
-        //}catch (Exception $e)
-        //{
-            
-        //}
-
         return $res;
             //'Imagen: <img src="https://image.tmdb.org/t/p/w500'.$imgJson["posters"][0]["file_path"].'" height="400" width="300">';
     }
@@ -162,12 +155,23 @@ Class moviedb
     }
     public function filterAttrib($peli)
     {
-        $intrestingKeys=array("id","popularity","title","overview","release_date");
+        $intrestingKeys=array("id","popularity","title","overview","release_date");  //,"genre_ids"
         $newPeli=array();
+        $genre="";
         foreach ($intrestingKeys as $key)
-        {
-           $newPeli[$key]= $peli[$key];
-        }
+        /*{
+            if ($key=="genre_ids")
+            {
+                foreach ($key as $valor)
+                {
+                    $genre=$genre.",".$valor; //01,02,05,etc
+                }
+                $newPeli[$key]= $genre;
+            }
+            else }*/{
+                $newPeli[$key]= $peli[$key];
+            }
+        
         $portra=$this->getPortrait($newPeli);
         
         $newPeli["image"]=$portra;
