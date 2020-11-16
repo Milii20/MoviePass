@@ -1,10 +1,12 @@
 <?php
 //funcion de cine, incluye un cinema (o una referencia a cinema), un array con los asientos CON CODIGO DE ASIENTO como key y ID DE USUARIO como value, si es 00000000 esta vacio
+
 namespace Models;
-Class Funcion
+use Models\iGuardable as iGuardable;
+Class Funcion implements iGuardable
 {
     private $idFuncion; //id interna de la funcion, para ordenarlas mejor en DAO
-    private $idPelicula; //id referenciando a la pelicula asociada a esta funcion
+    private $idPelicula; //objeto peli
     private $idCinema; //id referenciando al cine en concreto 
     private $fecha; //fecha de la peli
     private $hora; //hora de la peli
@@ -102,6 +104,41 @@ Class Funcion
             }
         }
         return $count;
+    }
+    public function toArray()
+    {
+        $arrayAux=array();
+        $arrayAux['id'] = $this->getId();
+        $arrayAux['idpelicula'] = $this->getIdPelicula();
+        $arrayAux['idcinema'] = $this->getIdCinema();
+        $arrayAux['fecha'] = $this->getFecha();
+        $arrayAux['hora'] = $this->getHora();
+        $arrayAux['asientos'] = $this->getArrayAsientosAsJson();
+        //$arrayAux['generos'] = $funcion->getArrayGenerosAsJson(); //DEBUG
+        return $arrayAux;
+    }
+    private function toArrayParam()
+    {
+        $arrayAux=array();
+        array_push($arrayAux, "id");
+        array_push($arrayAux, "idpelicula");
+        array_push($arrayAux, "idcinema");
+        array_push($arrayAux, "fecha");
+        array_push($arrayAux, "hora");
+        array_push($arrayAux, "asientos");
+        //array_push($arrayAux, "generos");  //DEBUG
+        return $arrayAux;
+    }
+    public function toArrayValue()
+    {
+        $arrayAux=array();
+        array_push($arrayAux, $this->getId());
+        array_push($arrayAux, $this->getIdPelicula());
+        array_push($arrayAux, $this->getIdCinema());
+        array_push($arrayAux, $this->getFecha());
+        array_push($arrayAux, $this->getHora());
+        array_push($arrayAux, $this->getArrayAsientosAsJson());
+        return $arrayAux;
     }
     /*
     public function getAsLetra($numero)

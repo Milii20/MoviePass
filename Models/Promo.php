@@ -1,7 +1,9 @@
 <?php
 //Promos, a la hora de checkout verifica si es aplicable alguna promo
+
 namespace Models;
-Class Promo
+use Models\iGuardable as iGuardable;
+Class Promo implements iGuardable
 {
     //no se pueden crear nuevas por el momento, arreglar despues
     private $tipo; //tipo de promo, valores validos: 1=fecha concreta, 2=dias de la semana, 3=mes, 4=edad mayor, 5=edad menor, 6=dia de la semana y edad, 7=todos (todo el mundo tiene esta promo)

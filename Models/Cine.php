@@ -2,7 +2,8 @@
 //Miniclase Cine, contiene uno o mas cinemas (salas), y un nombre
 
 namespace Models;
-Class Cine 
+use Models\iGuardable as iGuardable;
+Class Cine implements iGuardable 
 {
     private $id;//id que identifica al cine 
     private $arrayCinemas = array(); //array con las salas de cine
@@ -69,5 +70,42 @@ Class Cine
         }
         $this->setArrayPromos($arrayPro);
     }
+    public function toArray()
+    {
+        $arrayAux=array();
+        $arrayAux['id'] = $this->getId();
+        $arrayAux['nombre'] = $this->getNombre();
+        $arrayAux['descripcion'] = $this->getDescripcion();
+        $arrayAux['promos'] = $this->getArrayPromosJson();
+        return $arrayAux;
+    }
+    public function toArrayParam()
+    {
+        $arrayAux=array();
+        array_push($arrayAux, "id");
+        array_push($arrayAux, "nombre");
+        array_push($arrayAux, "descripcion");
+        array_push($arrayAux, "promos");
+        return $arrayAux;
+    }
+    public function toArrayValue()
+    {
+        $arrayAux=array();
+        array_push($arrayAux, $this->getId());
+        array_push($arrayAux, $this->getNombre());
+        array_push($arrayAux, $this->getDescripcion());
+        array_push($arrayAux, $this->getArrayPromosJson());
+        return $arrayAux;        
+    }
+    /*public function toArrayType() DEBUG por ahora lo desactivo, despues implementare creacion de tablas
+    {
+        $arrayAux=array();
+        array_push($arrayAux, "id");
+        array_push($arrayAux, "nombre");
+        array_push($arrayAux, "descripcion");
+        array_push($arrayAux, "promos");
+        return $arrayAux;
+    }*/
+
 }
 ?>

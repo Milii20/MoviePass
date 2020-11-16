@@ -22,6 +22,9 @@ define("USERTABLE","user");
 define("CINETABLE","cines");
 define("CINEMATABLE","cinemas");
 define("FUNCIONTABLE","funciones");
+define("PELICULATABLE","peliculas");
+define("GENEROTABLE","generos");
+define("PROMOTABLE","promos");
 
 ?>
 

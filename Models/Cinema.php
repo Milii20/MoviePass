@@ -6,7 +6,8 @@ por lo que llamar "Cinema" a todo el cine aldrey y todas sus salas no seria prac
 que Aldrey3D y Aldrey2D, ya que son salas diferentes con atributos diferentes, distribuciones diferentes, todo diferente, lo unico que los une seria el "cine general"
 */
 namespace Models;
-Class Cinema //tambien conocido como Sala de cine
+use Models\iGuardable as iGuardable;
+Class Cinema implements iGuardable//tambien conocido como Sala de cine
 {
     private $idCinema; //id interna del cinema
     private $idCine; //id del cine al que la sala corresponde
@@ -123,6 +124,51 @@ Class Cinema //tambien conocido como Sala de cine
     public function setArrayFunciones($arrayfun)
     {
         $this->arrayFunciones=$arrayfun;
+    }
+    public function toArray()
+    {
+        $arrayAux=array();
+        $arrayAux['id'] = $cinema->getId();
+        $arrayAux['idcine'] = $cinema->getIdCine();
+        $arrayAux['capacidadtotal'] = $cinema->getCapacidadTotal();
+        $arrayAux['nombre'] = $cinema->getNombre();
+        $arrayAux['direccion'] = $cinema->getDireccion();
+        $arrayAux['valordeentrada'] = $cinema->getValorEntrada();
+        $arrayAux['tiposala'] = $cinema->getTipoSala();
+        $arrayAux['cantgenteporfila'] = $cinema->getCantGentePorFila();
+        $arrayAux['distribucionizq'] = $cinema->getDistribucionIzq();
+        $arrayAux['distribucionder'] = $cinema->getDistribucionDer();
+        return $arrayAux;
+    }
+    public function toArrayParam()
+    {
+        $arrayAux=array();
+        array_push($arrayAux, "id");
+        array_push($arrayAux, "idcine");
+        array_push($arrayAux, "capacidadtotal");
+        array_push($arrayAux, "nombre");
+        array_push($arrayAux, "direccion");
+        array_push($arrayAux, "valordeentrada");
+        array_push($arrayAux, "tiposala");
+        array_push($arrayAux, "cantgenteporfila");
+        array_push($arrayAux, "distribucionizq");
+        array_push($arrayAux, "distribucionder");
+        return $arrayAux;
+    }
+    public function toArrayValue()
+    {
+        $arrayAux=array();
+        array_push($arrayAux,  $this->getId());
+        array_push($arrayAux,  $this->getIdCine());
+        array_push($arrayAux,  $this->getCapacidadTotal());
+        array_push($arrayAux,  $this->getNombre());
+        array_push($arrayAux,  $this->getDireccion());
+        array_push($arrayAux,  $this->getValorEntrada());
+        array_push($arrayAux,  $this->getTipoSala());
+        array_push($arrayAux,  $this->getCantGentePorFila());
+        array_push($arrayAux,  $this->getDistribucionIzq());
+        array_push($arrayAux,  $this->getDistribucionDer());
+        return $arrayAux;
     }
 }
 ?>

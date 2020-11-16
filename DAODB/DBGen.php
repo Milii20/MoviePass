@@ -22,6 +22,21 @@ namespace DAODB;
            
         return $res; 
     }
+    public static function createTable($tableName, $arrayVariables)  //array variables es un array Clave Valor con la Clave siendo el nombre de la variable y Valor el tipo en mysql
+    {                                                               // el ultimo valor del array incluye todas las contrains
+        $query = "CREATE TABLE IF NOT EXIST ".$tableName;
+        $queryAux = "(";
+        foreach($arrayVariables as $variable => $tipo)
+        {
+            $queryAux = $variable." ".$tipo."',";
+        }
+        $queryAux=substr($queryAux,0,(strlen($queryAux)-1)).")";
+        $query=$query.$queryAux;
+        
+        $connection = Connection::GetInstance();
+
+        $connection->ExecuteNonQuery($query, array(), QueryType::Query);
+    }
     public static function addOne($tableName, $arrayValores)
     {
         $query = "INSERT INTO ".$tableName;
@@ -55,7 +70,7 @@ namespace DAODB;
         }
     }
     
-    public static function getOne($tableName, $Param, $Value) //PARAM Y VALUE SON ARRAYS!!!!!!!!!!
+    public static function getWithCheck($tableName, $Param, $Value) //PARAM Y VALUE SON ARRAYS!!!!!!!!!!
     {
         $queryAux=" WHERE ".$Param[0]." = '".$Value[0]."' "; //agrego el primero, ya que es getOne, por parametros
         for ($i=1;$i<sizeof($Param);$i++) //ya que hay tantos $Param como $Values puedo hacer esto para los demas, si no hay mas de 1 parametro, entonces ni entra al for
