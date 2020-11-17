@@ -112,15 +112,28 @@ Class moviedb
     public function getAllGenres()  // DEBUG
     {
         $res2=file_get_contents('https://api.themoviedb.org/3/genre/movie/list?api_key='.KEY.'&language=es-ES'); 
-        echo $res2;
+        //echo $res2;
         $res3=json_decode($res2,true);
-        foreach ($res2['genres'] as $val)
+        $arrayAux = array();
+        $arrayAux2=array();
+        foreach ($res3['genres'] as $val)
         foreach ($val as $clave => $valor)
         {
-            echo "<br>clave: ".$clave;
-            echo " Valor: ".$valor;
+            //echo "Clave: ".$clave; echo " valor ".$valor."<br>";
+            if (strcasecmp($clave,"id")==0)
+                {
+                    $arrayAux2["id"] =$valor;
+                    
+                }
+                else
+                {
+                    $arrayAux2["nombre"]=$valor;
+                    array_push($arrayAux,$arrayAux2);
+                }
         }
+        return $arrayAux;
     }
+    
     public function getPortrait($peli)
     {
         $res="";
@@ -155,7 +168,7 @@ Class moviedb
     }
     public function filterAttrib($peli)
     {
-        $intrestingKeys=array("id","popularity","title","overview","release_date");  //,"genre_ids"
+        $intrestingKeys=array("id","popularity","title","overview","release_date");  //,"genre_ids","genres",,"genres"
         $newPeli=array();
         $genre="";
         foreach ($intrestingKeys as $key)

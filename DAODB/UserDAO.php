@@ -2,12 +2,18 @@
 //contiene alta baja modificacion y consulta de admins y clients
 //pero en DB
 namespace DAODB;
-use DAODB\DBGen as DBGen;
+//use DAODB\DBGen as DBGen;
+use DAODB\DAODB as DAODB;
 use Models\User as User;
 use Models\Admin as Admin;
 use Models\Client as Client;
-class UserDAO
+class UserDAO extends DAODB
 {
+    protected function getDatabase()
+    {
+        return USERTABLE;
+    }
+    /*          MOVIDOS A USER
     private function toArray(User $user)
     {
         $arrayAux = array();
@@ -40,26 +46,59 @@ class UserDAO
         array_push($arrayAux, $user->getfecha());
         array_push($arrayAux, $user->getType());
         return $arrayAux;
-    }
-    private function fromArray($ray)
+    }*/
+    protected function fromArray($array)
     {
-        $user = new User();
-        foreach ($ray as $array)
+        $type=$array['type'];
+        if (strcasecmp($type,"admin")==0)
         {
+            $user = new Admin();
+        }
+        else
+        {
+            $user = new Client();
+        }
             $user->setId($array['id']);
             $user->setNombre($array['nombre']);
             $user->setEmail($array['email']);
             $user->setPass($array['pass']);
             $user->setFecha($array['fecha']);
-            $user->setType($array['type']);
-        }
+            //$user->setType($array['type']);
+        
         return $user;
     }
+    protected function getArrayType()
+    {
+        $arrayAux=array();
+        $arrayAux['id'] = "INT NOT NULL AUTO_INCREMENT";
+        $arrayAux['nombre'] = "VARCHAR(500)";
+        $arrayAux['email'] = "VARCHAR(500)";
+        $arrayAux['pass'] = "VARCHAR (500)";
+        $arrayAux['fecha'] = "VARCHAR (50)";       
+        $arrayAux['type'] = "VARCHAR(50)";   
+        $arrayAux['CONSTRAINT pk_funcion'] = "PRIMARY KEY (id)";                                                                      //primary keys
+        //$arrayAux['CONSTRAINT fk_funcion_cinema'] = "FOREIGN KEY (idcinema) REFERENCES ".CINEMATABLE." (id) ON DELETE CASCADE ON UPDATE CASCADE";  //foreign key con cinemas
+        //$arrayAux['CONSTRAINT fk_funcion_pelicula'] = "FOREIGN KEY (idpelicula) REFERENCES ".PELICULATABLE." (id) ON DELETE NO ACTION ON UPDATE NO ACTION";  
+        //foreign key con peliculas, ya que no la voy a borrar nunca a la peli, y si borro la funcion la peli deberia seguir estando, no es necesaria
+        return $arrayAux;
+    }
+    public function GetByEmail($email)  //get 1
+    {   
+        $userFound = null;
+        $res=$this->getOneWithCheck(array('email'), array($email)); //ya que no deberia haber repetidos porque verifico que el email sea unico a la hora de crear un usuario, puedo tomar el resultado como 1 solo usuario
+        if(!empty($res))
+        {
+            $userFound=$res;
+        }
+        return $userFound; //o returna null, o returna un usuario
+        
+    }
+    /* EN DAODB
     public function GiveId()
     {
         return DBGen::getNewId(USERTABLE);
     }
-    public function Add(User $newUser)  //add 1
+    public function Add(User $newUser)  //      AHORA ES ADDWITHID EN DAODB
     {
         $newUser->setId($this->GiveId()); //ya que no tiene id hasta este punto el usuario, le asigno ahora
         DBGen::addOne(USERTABLE, $this->toArray($newUser));    
@@ -67,18 +106,9 @@ class UserDAO
     public function GetAll()            //getAll
     {
         return DBGen::getAll(USERTABLE);
-    }
-    public function GetByEmail($email)  //get 1
-    {   
-        $userFound = null;
-        $res=DBGen::getOne(USERTABLE, array('email'), array($email)); //ya que no deberia haber repetidos porque verifico que el email sea unico a la hora de crear un usuario, puedo tomar el resultado como 1 solo usuario
-        if(!empty($res))
-        {
-            $userFound=$this->fromArray($res);
-        }
-        return $userFound; //o returna null, o returna un usuario
-        
-    }
+    }*/
+
+    /*  YA ESTA EN DAODB
     public function GetById($id)
     {   
         $userFound = null;
@@ -103,7 +133,7 @@ class UserDAO
     public function Delete(User $User) 
     {
         DBGen::deleteOne(USERTABLE, array('id'), $user->getId()); //lo busca por id, y lo elimina
-    }
+    }*/
 
 
 

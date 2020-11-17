@@ -1,14 +1,15 @@
 <?php
 //Clase user, solo utilizada como container/plantilla para las clases admin y client
 namespace Models;
-Class User
+use Models\iGuardable as iGuardable;
+Abstract Class User implements iGuardable
 {
     private $id; //interno
     private $nombre;
     private $email;
     private $pass;
     private $fecha; //string en formato dia.mes.anio
-    private $type; //admin o user
+    //private $type; //admin o user
     public function getId()
     {
         return $this->id;
@@ -33,14 +34,12 @@ Class User
     {
         $this->nombre=$nom;
     }
-    public function getType()
-    {
-        return $this->type;
-    }
+    public abstract function getType(); //lo devuelve la subclase
+    /*
     public function setType($typ)
     {
         $this->type=$typ;
-    }
+    }*/
     public function getEmail()
     {
         return $this->email;
@@ -83,6 +82,39 @@ Class User
         }
         return $res;
         
+    }
+    public function toArray()
+    {
+        $arrayAux=array();
+        $arrayAux['id'] = $this->getId();
+        $arrayAux['nombre'] = $this->getNombre();
+        $arrayAux['email'] = $this->getEmail();
+        $arrayAux['pass'] = $this->getPass();
+        $arrayAux['fecha'] = $this->getFecha();
+        $arrayAux['type'] = $this->getType();
+        return $arrayAux;
+    }
+    public function toArrayParam()
+    {
+        $arrayAux=array();
+        array_push($arrayAux, "id");
+        array_push($arrayAux, "nombre");
+        array_push($arrayAux, "email");
+        array_push($arrayAux, "pass");
+        array_push($arrayAux, "fecha");
+        array_push($arrayAux, "type");
+        return $arrayAux;
+    }
+    public function toArrayValue()
+    {
+        $arrayAux=array();
+        array_push($arrayAux, $this->getId());
+        array_push($arrayAux, $this->getNombre());
+        array_push($arrayAux, $this->getEmail());
+        array_push($arrayAux, $this->getPass());
+        array_push($arrayAux, $this->getFecha());
+        array_push($arrayAux, $this->getType());
+        return $arrayAux;        
     }
 }
 ?>

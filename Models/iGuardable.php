@@ -1,5 +1,7 @@
 <?php
 // identifica a una clase como guardable, es decir, que tiene un DAO asociado
+
+namespace Models;
 interface iGuardable   
 {
     public function getId();

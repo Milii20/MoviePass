@@ -4,18 +4,18 @@
     namespace Controllers;
     use utilities\moviedb as moviedb;
     use utilities\QR as QR;
-    use DAOMaster\UserDAO as UserDAO; //cambiar luego a UserDAO de DAOMaster
-    use Models\User as User;
+    use DAODB\UserDAO as UserDAO; //cambiar luego a UserDAO de DAOMaster
+    use Models\Client as Client;
+    use Models\Admin as Admin;
 
     class HomeController
     {
         private $userDAO;
         private $message = "";
         //testing si anda el filtro de session
-        private $type = "home";
         public function getType()
         {
-            return $this->type;
+            return "home";
         }
         public function __construct()
         {
@@ -32,8 +32,8 @@
         public function ShowCine()
         {   
             $this->message= "Bienvenido!";
-            require_once(VIEWS_PATH."validate-session.php");
-            if ($_SESSION['loggedUser']->getType()=="admin")
+
+            if (strcasecmp($_SESSION['loggedUser']->getType(),"admin")==0)
             {
                 require_once(VIEWS_PATH."FormMenuAdmin.php");
             }
@@ -89,16 +89,16 @@
         }
         public function Register($nombre, $email, $dia , $mes, $anio, $password)
         {
-            $user = new User();
+            $user = new Client();       //no hay metodo para registrar admins aun
             $user->setNombre($nombre);
             $user->setEmail($email);
             $fecha=$dia.".".$mes.".".$anio; //preparado en formato dia.mes.anio
             $user->setFecha($fecha);
             $user->setPass($password);
-            $user->setType("cliente");
+            //$user->setType("cliente");
             if ($this->userDAO->GetByEmail($email)==null) //en otras palabras, si no existe
             {
-                $this->userDAO->add($user);
+                $this->userDAO->addWithId($user);
                 $this->message= "Usuario Creado con Exito! Loggeate con tu Email y Contraseña para continuar". $user->getFecha();
                 $this->Index();
             }
@@ -110,7 +110,7 @@
         }
         public function showModificar()
         {
-            require_once(VIEWS_PATH."validate-session.php");
+
             require_once(VIEWS_PATH."FormModificarUsuario.php");
         }
         public function Modificar($nombre, $email, $dia , $mes, $anio, $password)
@@ -128,7 +128,7 @@
         }
         public function showDarDeBaja()
         {
-            require_once(VIEWS_PATH."validate-session.php");
+
             require_once(VIEWS_PATH."FormDarDeBajaUsuario.php");
         }
 

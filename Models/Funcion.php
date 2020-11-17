@@ -6,10 +6,11 @@ use Models\iGuardable as iGuardable;
 Class Funcion implements iGuardable
 {
     private $idFuncion; //id interna de la funcion, para ordenarlas mejor en DAO
-    private $idPelicula; //objeto peli
+    private $Pelicula; //objeto peli
     private $idCinema; //id referenciando al cine en concreto 
     private $fecha; //fecha de la peli
     private $hora; //hora de la peli
+    //private $getDuracion;     //no implementado ya que varias viene sin duracion, usar 2 horas 
     private $arrayAsientos = array(); //generado en funcion del cine, es un array key como codigo de asiento (A1,A3,B1, etc) y value como id de usuario (si es 00000000 esta vacio)
     public function getFecha()
     {
@@ -35,13 +36,17 @@ Class Funcion implements iGuardable
     {
         $this->idFuncion=$idfun;
     }
+    public function getPelicula()
+    {
+        return $this->Pelicula;
+    }
+    public function setPelicula($Peli)
+    {
+        $this->Pelicula=$Peli;
+    }
     public function getIdPelicula()
     {
-        return $this->idPelicula;
-    }
-    public function setIdPelicula($idPeli)
-    {
-        $this->idPelicula=$idPeli;
+        return $this->Pelicula->getId();
     }
     public function getIdCinema()
     {
@@ -109,7 +114,7 @@ Class Funcion implements iGuardable
     {
         $arrayAux=array();
         $arrayAux['id'] = $this->getId();
-        $arrayAux['idpelicula'] = $this->getIdPelicula();
+        $arrayAux['idpelicula'] = $this->getPelicula()->getId();
         $arrayAux['idcinema'] = $this->getIdCinema();
         $arrayAux['fecha'] = $this->getFecha();
         $arrayAux['hora'] = $this->getHora();
@@ -117,7 +122,7 @@ Class Funcion implements iGuardable
         //$arrayAux['generos'] = $funcion->getArrayGenerosAsJson(); //DEBUG
         return $arrayAux;
     }
-    private function toArrayParam()
+    public function toArrayParam()
     {
         $arrayAux=array();
         array_push($arrayAux, "id");
@@ -133,7 +138,7 @@ Class Funcion implements iGuardable
     {
         $arrayAux=array();
         array_push($arrayAux, $this->getId());
-        array_push($arrayAux, $this->getIdPelicula());
+        array_push($arrayAux, $this->getPelicula()->getId());
         array_push($arrayAux, $this->getIdCinema());
         array_push($arrayAux, $this->getFecha());
         array_push($arrayAux, $this->getHora());

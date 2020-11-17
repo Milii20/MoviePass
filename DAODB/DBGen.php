@@ -9,7 +9,7 @@ namespace DAODB;
         
     public static function getNewId($tableName) //obtiene la proxima id disponible, ya que cada cosa que se guarda TIENE una id
     {
-        $query = "SELECT * FROM ".$tableName." ORDER BY 'id' DESC ";
+        $query = "SELECT * FROM ".$tableName." ORDER BY 'id' ASC ";
         $connection = Connection::GetInstance();
         $result = $connection->Execute($query, array(), QueryType::Query); 
         $res=0;
@@ -24,15 +24,14 @@ namespace DAODB;
     }
     public static function createTable($tableName, $arrayVariables)  //array variables es un array Clave Valor con la Clave siendo el nombre de la variable y Valor el tipo en mysql
     {                                                               // el ultimo valor del array incluye todas las contrains
-        $query = "CREATE TABLE IF NOT EXIST ".$tableName;
+        $query = "CREATE TABLE IF NOT EXISTS ".$tableName;
         $queryAux = "(";
         foreach($arrayVariables as $variable => $tipo)
         {
-            $queryAux = $variable." ".$tipo."',";
+            $queryAux = $queryAux.$variable." ".$tipo.",";
         }
         $queryAux=substr($queryAux,0,(strlen($queryAux)-1)).")";
         $query=$query.$queryAux;
-        
         $connection = Connection::GetInstance();
 
         $connection->ExecuteNonQuery($query, array(), QueryType::Query);
@@ -40,21 +39,69 @@ namespace DAODB;
     public static function addOne($tableName, $arrayValores)
     {
         $query = "INSERT INTO ".$tableName;
-        $queryAux = " VALUES (";
+        
+        $queryAuxTypes = " (";
+        $queryAuxVal = " VALUES (";
+        //$queryAuxExists="WHERE NOT EXISTS ( SELECT * FROM ".$tableName." WHERE ";
         foreach($arrayValores as $clave => $valor)
         {
-            
-            $queryAux = $queryAux."'".$valor."',";
+            if (strcasecmp($clave,"id")!=0) //si no es la id
+            {
+                $queryAuxTypes = $queryAuxTypes.$clave.",";
+                $queryAuxVal = $queryAuxVal."'".$valor."',";
+                //$queryAuxExists = $queryAuxExists.$clave."='".$valor."',";
+            }
             
         }
-        $queryAux=substr($queryAux,0,(strlen($queryAux)-1)).")";
-        $query=$query.$queryAux;
+        $queryAuxTypes=substr($queryAuxTypes,0,(strlen($queryAuxTypes)-1)).")";
+        $queryAuxVal=substr($queryAuxVal,0,(strlen($queryAuxVal)-1)).")";
+        //$queryAuxExists=substr($queryAuxExists,0,(strlen($queryAuxExists)-1)).")";
         
+        $query=$query.$queryAuxTypes.$queryAuxVal;//.$queryAuxExists;
         $connection = Connection::GetInstance();
 
         $connection->ExecuteNonQuery($query, array(), QueryType::Query);
     }
    
+    public static function addOneWithId($tableName, $arrayValores)
+    {
+        $query = "INSERT INTO ".$tableName;
+        $param=array();
+        $values=array();
+        $queryAuxTypes = " (";
+        $queryAuxVal = " VALUES (";
+        //$queryAuxExists="WHERE NOT EXISTS ( SELECT * FROM ".$tableName." WHERE 'id'=".$arrayValores["id"].")";
+        foreach($arrayValores as $clave => $valor)
+        {
+            //if (strcasecmp($clave,"id")!=0) //si no es la id
+            //{
+                $queryAuxTypes = $queryAuxTypes.$clave.",";
+                array_push($param,$clave);
+                $queryAuxVal = $queryAuxVal."'".$valor."',";
+                array_push($values,$valor);
+                //$queryAuxExists = $queryAuxExists.$clave."='".$valor."',";
+            //}
+            
+        }
+
+        
+        
+            $queryAuxTypes=substr($queryAuxTypes,0,(strlen($queryAuxTypes)-1)).")";
+            $queryAuxVal=substr($queryAuxVal,0,(strlen($queryAuxVal)-1)).")";
+            //$queryAuxExists=substr($queryAuxExists,0,(strlen($queryAuxExists)-1)).")";
+            
+            $query=$query.$queryAuxTypes.$queryAuxVal;//.$queryAuxExists;
+        if (self::getWithCheck($tableName,$param,$values)!=null)
+        {
+                //si existe, no lo agrego
+        }
+        else
+        {    
+            $connection = Connection::GetInstance();
+    
+            $connection->ExecuteNonQuery($query, array(), QueryType::Query);
+        }
+    }
     public static function addMany($tableName, $arrayCosas) //no creo que lo use, pero bueno, aca esta
     {
         $query = "INSERT INTO ".$tableName;

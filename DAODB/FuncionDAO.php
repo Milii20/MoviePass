@@ -1,22 +1,26 @@
 <?php
 namespace DAODB;
     use DAODB\DAODB as DAODB;
+    use DAODB\PeliculaDAO as PeliculaDAO;
     use Models\Funcion as Funcion;
+    use Models\Pelicula as Pelicula;
     use Utilities\calendar as Calendar;
-    class CinemaDAO extends DAODB 
+    class FuncionDAO extends DAODB 
     {
-        private static function getDatabase()
+        protected function getDatabase()
         {
             return FUNCIONTABLE;
         }
-        public static function fromArray($arrayAux)
+        protected function fromArray($arrayAux)
         {
             $funcion = null;
             if (!empty($arrayAux))
             {
                 $funcion = new Funcion();
                 $funcion->setId($arrayAux['id']);
-                $funcion->setIdPelicula($arrayAux['idpelicula']);
+                $pelidao = new PeliculaDAO();
+                $peli = $pelidao->getOneById($arrayAux['idpelicula']);
+                $funcion->setPelicula($peli);
                 $funcion->setIdCinema($arrayAux['idcinema']);
                 $funcion->setFecha($arrayAux['fecha']);
                 $funcion->setHora($arrayAux['hora']);
@@ -24,10 +28,10 @@ namespace DAODB;
             }
             return $funcion;
         }
-        private static function getArrayType()
+        protected function getArrayType()
         {
             $arrayAux=array();
-            $arrayAux['id'] = "INT NOT NULL";
+            $arrayAux['id'] = "INT NOT NULL AUTO_INCREMENT";
             $arrayAux['idpelicula'] = "INT NOT NULL";
             $arrayAux['idcinema'] = "INT NOT NULL";
             $arrayAux['fecha'] = "VARCHAR (50)";
@@ -39,15 +43,49 @@ namespace DAODB;
             //foreign key con peliculas, ya que no la voy a borrar nunca a la peli, y si borro la funcion la peli deberia seguir estando, no es necesaria
             return $arrayAux;
         }
-        public static function getAllFuncionesFromCinemaID($cinemaID)
+        public function getAllFuncionesByCinemaID($cinemaID)
         {
             $arrayFunciones = array();
-            $arrayFunciones = self::getManyWithCheck(array("idcinema"), $cinemaID);
+            $arrayFunciones = $this->getManyWithCheck(array("idcinema"), array($cinemaID));
             return $arrayFunciones;
         }
-        public static function getFuncionById($id)
+        public function getFuncionById($id)
         {
-            return self::getOneById($id);
+            return $this->getOneById($id);
+        }
+        public function getFuncionesByIdClienteAsiento($idCliente)
+        {
+            $res = array();
+            $funciones = array();
+            $funciones= $this->getAll();
+            {
+                foreach ($funciones as $funcion)
+                {
+                    $agregar = false;
+                    foreach ($funcion->getArrayAsientos() as $Asiento => $idCli)
+                    {
+                        if ($idCli==$idCliente)
+                        {
+                            $agregar = true;
+                        }
+                    }
+                    if ($agregar == true)
+                    {
+                        array_push($res,$funcion);
+                    }
+                    
+                }
+            }
+            return $res;
+        }
+        public function deleteFuncionesByIdCinema($idCinema)
+        {
+            $arrayFunciones = array();
+            $arrayFunciones = $this->getManyWithCheck(array("idcinema"), array($idCinema));
+            foreach ($arrayFunciones as $funciones)
+            {
+                $this->delete($funciones->getId());
+            }
         }
     }
 

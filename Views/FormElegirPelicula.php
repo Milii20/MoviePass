@@ -3,22 +3,85 @@
 //de esta manera: pelicula (unica, por mas uqe este en multiples cines), dentro de cada peli un boton que vaya a cada cine 
 ?>
 <?php
+    require_once(VIEWS_PATH."validate-session.php");
 require_once(VIEWS_PATH."message.php");$i=0;
 if(!empty($listaPelis))
 {
-    
+    echo "<div class=promoCine>";
+    echo "Promociones Vigentes: <br>";
+    echo "Con tu compra de 2 entradas o mas los dias Martes y Miercoles ";
+    echo "obtendras un 25% de descuento!";
+    echo "</div>";
     echo "<div class=filtrogrande>";
     echo "<div class=filtro2>";
     echo '<form action='.FRONT_ROOT.'Client/filtrarPelisPorFecha  method="post">';
+    echo 'Dia Inicial:<select name="diaInicial">';
+        
+        for ($i = 1; $i <= 31; $i++) 
+        {
+        echo "<option value=".$i.">".$i."</option>";
+        }
+
+        echo '        </select>
+        Mes Inicial:<select name="mesInicial">
+        <option value="1">Enero</option> 
+        <option value="2">Febrero</option>
+        <option value="3">Marzo</option>
+        <option value="4">Abril</option> 
+        <option value="5">Mayo</option>
+        <option value="6">Junio</option>
+        <option value="7">Julio</option> 
+        <option value="8">Agosto</option>
+        <option value="9">Septiembre</option>
+        <option value="10">Octubre</option> 
+        <option value="11">Noviembre</option>
+        <option value="12">Diciembre</option>
+        </select>
+        Año Inicial:<select name="anioInicial">';
+
+        for ($i = date('Y'); $i <= date('Y')+10; $i++) {
+        echo "<option value=".$i.">".$i."</option>";
+        }
+        echo "</select>";
+        echo "<br>";
+        echo 'Dia Final:<select name="diaFinal">';
+            
+            for ($i = 1; $i <= 31; $i++) 
+            {
+            echo "<option value=".$i.">".$i."</option>";
+            }
+    
+            echo '        </select>
+            Mes Final:<select name="mesFinal">
+            <option value="1">Enero</option> 
+            <option value="2">Febrero</option>
+            <option value="3">Marzo</option>
+            <option value="4">Abril</option> 
+            <option value="5">Mayo</option>
+            <option value="6">Junio</option>
+            <option value="7">Julio</option> 
+            <option value="8">Agosto</option>
+            <option value="9">Septiembre</option>
+            <option value="10">Octubre</option> 
+            <option value="11">Noviembre</option>
+            <option value="12">Diciembre</option>
+            </select>
+            Año Final:<select name="anioFinal">';
+    
+            for ($i = date('Y'); $i <= date('Y')+10; $i++) {
+            echo "<option value=".$i.">".$i."</option>";
+            }
+            echo "</select>";
     echo '<button  type="submit" name="btnLogin">Filtrar Peliculas por Fecha</button>';
     echo '</form>';  
-    echo "</div>";
+    echo "</div>";/*
     echo "<div class=filtro2>";
     echo '<form action='.FRONT_ROOT.'Client/filtrarPelisPorGenero  method="post">';
     echo '<button  type="submit" name="btnLogin">Filtrar Peliculas por Genero</button>';
-    echo '</form>';  
+    echo '</form>'; 
+    echo "</div>";*/ 
     echo "</div>";
-    echo "</div>";
+    $i=0;
     foreach ($listaPelis as $peli)
     {
         

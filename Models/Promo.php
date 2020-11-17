@@ -3,15 +3,42 @@
 
 namespace Models;
 use Models\iGuardable as iGuardable;
-Class Promo implements iGuardable
+use Utilities\Calendar as Calendar;
+Class Promo //implements iGuardable
 {
     //no se pueden crear nuevas por el momento, arreglar despues
-    private $tipo; //tipo de promo, valores validos: 1=fecha concreta, 2=dias de la semana, 3=mes, 4=edad mayor, 5=edad menor, 6=dia de la semana y edad, 7=todos (todo el mundo tiene esta promo)
-    private $respuesta; //dato a verificar, puede ser una fecha, genero, etc;
+    /*private $id;
+    private $dias;
     private $porcentaje; //porcentaje de descuento
-    private $tieneFin; //booleano que dice si tiene o no fin una promo
     private $fechaInicio; //inicio de la promo
-    private $fechaFin; //fin de la promo
+    private $fechaFin; //fin de la promo*/
+    public static function Aplicable($valor)
+    {
+        if (strcmp(Calendar::day(),"Tuesday")==0)
+        {
+            $valor=$valor-0.25*$valor;
+            return $valor;
+        }
+        elseif (strcmp(Calendar::day(),"Wednesday")==0)
+        {
+            $valor=$valor-0.25*$valor;
+            return $valor;
+        }
+        else
+        {
+            return $valor;
+        }
+    }
+    /*
+
+    public function getId()
+    {
+        return $this->id;
+    }
+    public function setId($id)
+    {
+        $this->id=$id;
+    }
     public function getAsJson()
     {
         $arrayAux=array();
@@ -210,5 +237,39 @@ Class Promo implements iGuardable
         }
         return $res;
     }
+    //DEBUG ARREGLAR
+    public function toArray()
+    {
+        $arrayAux=array();
+        $arrayAux['id'] = $this->getId();
+        $arrayAux['tipo'] = $this->getNombre();
+        $arrayAux['respuesta'] = $this->getEmail();
+        $arrayAux['pass'] = $this->getPass();
+        $arrayAux['fecha'] = $this->getFecha();
+        $arrayAux['type'] = $this->getType();
+        return $arrayAux;
+    }
+    public function toArrayParam()
+    {
+        $arrayAux=array();
+        array_push($arrayAux, "id");
+        array_push($arrayAux, "nombre");
+        array_push($arrayAux, "email");
+        array_push($arrayAux, "pass");
+        array_push($arrayAux, "fecha");
+        array_push($arrayAux, "type");
+        return $arrayAux;
+    }
+    public function toArrayValue()
+    {
+        $arrayAux=array();
+        array_push($arrayAux, $this->getId());
+        array_push($arrayAux, $this->getNombre());
+        array_push($arrayAux, $this->getEmail());
+        array_push($arrayAux, $this->getPass());
+        array_push($arrayAux, $this->getFecha());
+        array_push($arrayAux, $this->getType());
+        return $arrayAux;        
+    }*/
 }
 ?>

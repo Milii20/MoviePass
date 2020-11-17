@@ -3,6 +3,8 @@
 
 namespace Models;
 use Models\iGuardable as iGuardable;
+use Models\cinema as cinema;
+use Models\funcion as funcion;
 Class Cine implements iGuardable 
 {
     private $id;//id que identifica al cine 
@@ -97,15 +99,43 @@ Class Cine implements iGuardable
         array_push($arrayAux, $this->getArrayPromosJson());
         return $arrayAux;        
     }
-    /*public function toArrayType() DEBUG por ahora lo desactivo, despues implementare creacion de tablas
+    public function getCantidadAsientosOcupados()
     {
-        $arrayAux=array();
-        array_push($arrayAux, "id");
-        array_push($arrayAux, "nombre");
-        array_push($arrayAux, "descripcion");
-        array_push($arrayAux, "promos");
-        return $arrayAux;
-    }*/
+        $res=0;
+        foreach ($this->getArrayCinemas() as $cinema)
+        {
+            foreach ($cinema->getArrayFunciones() as $funcion)
+            {
+                $res=$res+$funcion->getCantAsientosOcupados();
+            }
+        }
+        return $res;
+    }
+    public function getCantidadAsientosDisponibles()
+    {
+        $res=0;
+        foreach ($this->getArrayCinemas() as $cinema)
+        {
+            foreach ($cinema->getArrayFunciones() as $funcion)
+            {
+                $res=$res+$funcion->getCantAsientosDisponibles();
+            }
+        }
+        return $res;
+    }
+    public function getTotalVendidoEnPesos()
+    {
+        $res=0;
+        foreach ($this->getArrayCinemas() as $cinema)
+        {
+            foreach ($cinema->getArrayFunciones() as $funcion)
+            {
+                $res=$res+$funcion->getCantAsientosOcupados()*$cinema->getValorEntrada();
+            }
+        }
+        return $res;
+    }
+
 
 }
 ?>

@@ -6,17 +6,18 @@ namespace DAODB;
     use DAODB\DAODB as DAODB;
     use DAODB\DBGen as DBGen;
     use DAODB\CinemaDAO as CinemaDAO;   //requerido para poder cargar las salas de cine
+    use DAODB\FuncionDAO as FuncionDAO;  
     use Models\Cine as Cine;
     use Utilities\calendar as Calendar;
 
-    class CineDAO 
+    class CineDAO extends DAODB
     {
-        private static function getDatabase()
+        protected function getDatabase()
         {
             return CINETABLE;
         }
         //private $connection; //DEBUG no es necesaria aca, ya que DBGEN se encarga de la connection
-        private static function fromArray($arrayAux)
+        protected function fromArray($arrayAux)
         {
             $cine=null;
             if (!empty($arrayAux))
@@ -29,10 +30,10 @@ namespace DAODB;
             }
             return $cine;
         }
-        private static function getArrayType()
+        protected function getArrayType()
         {
             $arrayAux=array();
-            $arrayAux['id'] = "INT NOT NULL";
+            $arrayAux['id'] = "INT NOT NULL AUTO_INCREMENT";
             $arrayAux['nombre'] = "VARCHAR (500)";
             $arrayAux['descripcion'] = "VARCHAR (500)";       
             $arrayAux['promos'] = "VARCHAR (500)";   //contiene las ids de las promos
@@ -40,27 +41,50 @@ namespace DAODB;
             return $arrayAux;
         }
         
-        public static function getAll() //Sobreescribe a getAll de DAODB, ya que tiene que traer TODOS los cines con sus cinemas y sus funciones
+        public function getAll() //Sobreescribe a getAll de DAODB, ya que tiene que traer TODOS los cines con sus cinemas y sus funciones
         {
-            $res = DBGen::getAll(self::getDatabase());
+            $res = DBGen::getAll($this->getDatabase());
             $arrayRes = array();
+            $cinemadao = new CinemaDAO();
             foreach ($res as $array)
             {
-                $cine = self::fromArray($array);
-                $cine->setArrayCinemas(CinemaDAO::getAllCinemasFromCineID($cine->getId()));
+                $cine = $this->fromArray($array);
+                $cine->setArrayCinemas($cinemadao->getAllCinemasFromCineID($cine->getId()));
                 array_push($arrayRes, $cine);
             }
             return $arrayRes;
         }
-        public static function getCineById($id) //trae solo 1
+        public function getCineById($id) //trae solo 1
         {
-            return self::getOneById($id);
+            return $this->getOneById($id);
         }
-        public static function delete($id)  //sobreescribe al de DAODB
+        public function delete($id)  //sobreescribe al de DAODB
         {
-            DBGen::deleteOne(self::getDatabase(), array('id'), $id); //lo busca por id, y lo elimina
-            CinemaDAO::deleteCinemasByIdCine($idCine);
+            $cinemadao = new CinemaDAO();
+            DBGen::deleteOne($this->getDatabase(), array('id'), $id); //lo busca por id, y lo elimina
+            $cinemadao->deleteCinemasByIdCine($id);
         }
+        
+        public function getFuncionDisponible() //puede traer muchos
+        {
+            $funciondao = new FuncionDAO();
+            $arrayFunciones=array();
+            foreach(DBGen::getAll(FUNCIONTABLE) as $funcion)
+            {
+                
+                //foreach($func as $funcion)
+                {
+                    $func = $funciondao->fromArray($funcion);
+                   if (calendar::ComparaFechas($func->getFecha(),date('d.m.y')))
+                    {
+                        array_push($arrayFunciones,$func);
+                    }
+                }
+                
+            }
+            return $arrayFunciones;
+        
+        }       
 /* DEBUG VERIFICAR QUE ESTO NO SEA NECESARIO
         
         
@@ -92,7 +116,7 @@ namespace DAODB;
             return $arrayFunciones;
         
         }   */      
-        public function deleteCine($idCine) //eliminar encadenado, elimina el cine,  elimina todos los cinemas y todas las funciones de cada cinema
+        /*public function deleteCine($idCine) //eliminar encadenado, elimina el cine,  elimina todos los cinemas y todas las funciones de cada cinema
         {
             DBGen::deleteOne(CINETABLE, array('id'), $idCine); //lo busca por id, y lo elimina
             $this->deleteCinemasByIdCine($idCine);
@@ -107,12 +131,7 @@ namespace DAODB;
                     $this->deleteCinema($cinema->getId());
             }
         }    
-        public function deleteCinema($idCinema) //elimina el cinema y todas las funciones del mismo
-        {
-            DBGen::deleteOne(CINEMATABLE, array('id'), $idCinema); //lo busca por id, y lo elimina
-            $this->deleteFuncionesByIdCinema($idCinema);
-
-        }       
+     
         public function deleteFuncionesByIdCinema($idCinema)
         {
             $funcionArray = array();
@@ -126,7 +145,7 @@ namespace DAODB;
         public function deleteFuncion($funcionId)
         {
             DBGen::deleteOne(FUNCIONTABLE, array('id'), $funcionId); //lo busca por id, y lo elimina
-        }
+        }*/
 
     }
 ?>

@@ -3,6 +3,8 @@
 ?>
 
 <?php
+
+    require_once(VIEWS_PATH."validate-session.php");
     require_once(VIEWS_PATH."message.php");
     $sig=@(int)($pag+1);
     $ant=@(int)($pag-1);
@@ -67,7 +69,8 @@
         echo "</select>";
         echo 'Hora: <select name="hora">';
         
-        for ($i = 0; $i <= 23; $i++) 
+        //solo va a haber pelis desde el mediodia hasta las 23 pm, horario normal de cines
+        for ($i = 12; $i <= 23; $i++) 
         {
         echo "<option value=".$i.">".$i."</option>";
         }

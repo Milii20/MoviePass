@@ -7,8 +7,12 @@ Una vez seleccionada peli, cine y horario preguntar cantidad de personas y mostr
 verificar el dia de la compra, ya que martes y miercoles hay 25% de descuento comprando al menos 2 entradas
 */
 namespace Models;
+use Models\iGuardable as iGuardable;
 Class Client extends User
 {
-
+    public function getType()
+    {
+        return "Client";
+    }
 }
 ?>

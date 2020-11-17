@@ -2,6 +2,7 @@
 //hacerla facil, generar una table con asientos, donde los asientos ocupados se muestran con la celda de color de fondo rojo y sin checkbox, los asientos disponibles se muestran blancos y con checkbox
 // pasillos = amarillo o otro color?
 //los asientos son checkbox
+    require_once(VIEWS_PATH."validate-session.php");
         require_once(VIEWS_PATH."message.php");
 ?>
 
@@ -31,13 +32,18 @@ if (!empty($funcion->getArrayAsientos()))
             
             if ($value==0)
             {
-                echo '<td bgcolor="#008f39">';
+                echo '<td bgcolor="#6DB76D">';
                 echo 'Fila: '.$arrayIdAsiento[0].', Asiento: '.$arrayIdAsiento[1]." Disponible";
                 echo '<input type="checkbox" name="Asientos[]" value="'.$clave.'">';
             }
+            elseif ($value==$idCliCli)
+            {
+                echo '<td bgcolor="#9999FF">';
+                echo 'Fila: '.$arrayIdAsiento[0].', Asiento: '.$arrayIdAsiento[1].' Adquirido';
+            }
             else
             {
-                echo '<td bgcolor="#FF0000">';
+                echo '<td bgcolor="#FF3232">';
                 echo 'Fila: '.$arrayIdAsiento[0].', Asiento: '.$arrayIdAsiento[1].' Ocupado';
                  
             }

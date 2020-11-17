@@ -10,5 +10,9 @@ namespace Models;
 Class Admin extends User
 {
     //solo se loggea por mail y pass, para facilitar que nadie le robe la pass del fb y de la nada manejan todo un cine
+    public function getType()
+    {
+        return "Admin";
+    }
 }
 ?>

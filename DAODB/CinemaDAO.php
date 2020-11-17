@@ -1,16 +1,17 @@
 <?php
 namespace DAODB;
     use DAODB\DAODB as DAODB;
+    use DAODB\DBGen as DBGen;
     use Models\Cinema as Cinema;
     use DAODB\FuncionDAO as FuncionDAO; //requerido para poder cargar las funciones de cada sala de cine
     use Utilities\calendar as Calendar;
     class CinemaDAO extends DAODB 
     {
-        private static function getDatabase()
+        protected function getDatabase()
         {
             return CINEMATABLE;
         }
-        public static function fromArray($arrayAux)
+        protected function fromArray($arrayAux)
         {   
             $cinema=null;
             if (!empty($arrayAux))
@@ -30,10 +31,10 @@ namespace DAODB;
             }         
             return $cinema;
         }
-        private static function getArrayType()
+        protected function getArrayType()
         {
             $arrayAux=array();
-            $arrayAux['id'] = "INT NOT NULL";
+            $arrayAux['id'] = "INT NOT NULL AUTO_INCREMENT";
             $arrayAux['idcine'] = "INT NOT NULL";
             $arrayAux['capacidadtotal'] = "INT";
             $arrayAux['nombre'] = "VARCHAR (500)";
@@ -47,19 +48,35 @@ namespace DAODB;
             $arrayAux['CONSTRAINT fk_cinema_cine'] = "FOREIGN KEY (idcine) REFERENCES ".CINETABLE." (id) ON DELETE CASCADE ON UPDATE CASCADE";  //foreign key con cines
             return $arrayAux;
         }
-        public static function getAllCinemasFromCineID($cineID)
+        public function getAllCinemasFromCineID($cineID)
         {
             $arrayCinemas = array();
-            $arrayCinemas = self::getManyWithCheck(array("idcine"), $cineID);
+            $arrayCinemas = $this->getManyWithCheck(array("idcine"), array($cineID));
+            $funciondao = new FuncionDAO();
             foreach ($arrayCinemas as $cinema)
             {
-                $cinema->setArrayFunciones(FuncionDAO::getAllFuncionesFromCinemaID($cinema->getId()));
+                $cinema->setArrayFunciones($funciondao->getAllFuncionesByCinemaID($cinema->getId()));
             }
             return $arrayCinemas;
         }
-        public static function getCinemaById($id)
+        public function delete($idCinema) //elimina el cinema y todas las funciones del mismo
         {
-            return self::getOneById($id);
+            $funciondao = new FuncionDAO();
+            DBGen::deleteOne($this->getDatabase(), array('id'), array($idCinema)); //lo busca por id, y lo elimina
+            $funciondao->deleteFuncionesByIdCinema($idCinema);
+        }  
+        public function deleteCinemasByIdCine($idCine)
+        {
+            $arrayCinemas = array();
+            $arrayCinemas = $this->getManyWithCheck(array("idcine"), array($idCine));
+            foreach ($arrayCinemas as $cinema)
+            {
+                $this->delete($cinema->getId());
+            }
+        }
+        public function getCinemaById($id)
+        {
+            return $this->getOneById($id);
         }
 
     }

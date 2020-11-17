@@ -4,26 +4,24 @@
   {
     header("location:../index.php");
   }
-
-  // ARREGLAR, no anda cuando cambias de controller
-
-  /*elseif (!($this->getType() == "home")) //si no es home
+  elseif (strcasecmp($this->getType(), "home")!=0) //si no es home
   {
-      if($this->getType() == "admin") //si es admin
+      if(strcasecmp($this->getType(), "admin")==0) //si es admin
       {
-        if (!($_SESSION["loggedUser"] instanceof Admin)) 
+        if (strcasecmp($_SESSION["loggedUser"]->getType(),"admin")!=0) //si el usuario no es admin
         {
           header("location:../index.php"); 
         }
       }
-      elseif($this->getType() == "client") //si es client
+      elseif(strcasecmp($this->getType(), "client")==0) //si es client
       {
         //no deberia hacer nada, no?, ya que el admin deberia ver la parte cliente tambien si quiere
-        if (!($_SESSION["loggedUser"] instanceof Client)) 
+        if (strcasecmp($_SESSION["loggedUser"]->getType(),"client")!=0)   //si el usuario no es client
         {
           header("location:../index.php"); 
         }
       }
-  }*/
+  }
+  else
   
 ?>

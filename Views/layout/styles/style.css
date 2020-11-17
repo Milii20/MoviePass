@@ -11,7 +11,47 @@ table, th, td {
         margin-right: auto;
 
 }
+.infoCine {
+    width:400px;
+    border: 5px outset #ad4658;
+    background-color: #b47d86;
+    margin-left: auto;
+    margin-right: auto;
 
+}
+.promoCine {
+    width:300px;
+    border: 5px outset #dce00e;
+    background-color: #c2c476;;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+.filtro2 {
+    width:500px;
+    border: 5px outset #dce00e;
+    background-color: #c2c476;;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+.qr {
+    width:650px;
+    border: 5px outset #49aec7;
+    background-color: #a9dde0;;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+.miniqr {
+    width:200px;
+    border: 5px outset #85c9da;
+    background-color: #61c3c9;
+    float: top;
+    margin-left: auto;
+    margin-right: auto;
+
+}
     .cinemacs {
         width: 500px;
         border: 4px outset #17bb14;

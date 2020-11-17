@@ -1,5 +1,6 @@
 <?php
 //muestra los cines existentes
+    require_once(VIEWS_PATH."validate-session.php");
     require_once(VIEWS_PATH."message.php");
 ?>
 <br>
@@ -15,6 +16,7 @@
         {
             echo "<div class='cinecs'>";
             //echo "<br>/---------------------------------------------------------------------------------------\<br>";
+            echo "<div class='infoCine'>";
             echo "<br>Nombre del Cine: ".$cine->getNombre();
             echo "<br>Descripcion del Cine: ".$cine->getDescripcion();
             echo "<br>";
@@ -29,7 +31,17 @@
             echo '<form action='.FRONT_ROOT.'Admin/showEliminarCine  method="post">';
             echo '<button  type="submit" name="btnLogin" value='.$cine->getId().'>Eliminar Cine</button>';
             echo '</form>';
-            echo "<br>";
+            echo '<br>Cantidad de Entradas Vendidas: '.$cine->getCantidadAsientosOcupados();
+            echo '<br>Cantidad de Entradas Restantes: '.$cine->getCantidadAsientosDisponibles();
+            echo '<br>Ganancia Total Obtenida: '.$cine->getTotalVendidoEnPesos();
+            echo "</div>";
+            if(!empty($cine->getArrayPromos()))
+            {
+                echo "<div class='promoCine'>";
+                echo "soy una promo";
+                echo "</div>";
+                echo "<br>";
+            }
             if(!empty($cine->getArrayCinemas()))
             {
                 echo "<br> Cinemas: <br>";
@@ -71,7 +83,7 @@
                         foreach($cinema->getArrayFunciones() as $funcion)
                         {
                             echo "<div class='funcioncs'>";
-                            echo "<br> Nombre de la pelicula: ".($this->movieDB->getById($funcion->getIdPelicula()))['title'];
+                            echo "<br> Nombre de la pelicula: ".($this->movieDB->getById($funcion->getPelicula()->getId()))['title'];
                             echo "<br> Fecha: ".$funcion->getFecha();
                             echo "<br> Hora: ".$funcion->getHora();
                             echo "<br> Cantidad de Asientos Vendidos: ".$funcion->getCantAsientosOcupados();

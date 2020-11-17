@@ -128,16 +128,16 @@ Class Cinema implements iGuardable//tambien conocido como Sala de cine
     public function toArray()
     {
         $arrayAux=array();
-        $arrayAux['id'] = $cinema->getId();
-        $arrayAux['idcine'] = $cinema->getIdCine();
-        $arrayAux['capacidadtotal'] = $cinema->getCapacidadTotal();
-        $arrayAux['nombre'] = $cinema->getNombre();
-        $arrayAux['direccion'] = $cinema->getDireccion();
-        $arrayAux['valordeentrada'] = $cinema->getValorEntrada();
-        $arrayAux['tiposala'] = $cinema->getTipoSala();
-        $arrayAux['cantgenteporfila'] = $cinema->getCantGentePorFila();
-        $arrayAux['distribucionizq'] = $cinema->getDistribucionIzq();
-        $arrayAux['distribucionder'] = $cinema->getDistribucionDer();
+        $arrayAux['id'] = $this->getId();
+        $arrayAux['idcine'] = $this->getIdCine();
+        $arrayAux['capacidadtotal'] = $this->getCapacidadTotal();
+        $arrayAux['nombre'] = $this->getNombre();
+        $arrayAux['direccion'] = $this->getDireccion();
+        $arrayAux['valordeentrada'] = $this->getValorEntrada();
+        $arrayAux['tiposala'] = $this->getTipoSala();
+        $arrayAux['cantgenteporfila'] = $this->getCantGentePorFila();
+        $arrayAux['distribucionizq'] = $this->getDistribucionIzq();
+        $arrayAux['distribucionder'] = $this->getDistribucionDer();
         return $arrayAux;
     }
     public function toArrayParam()

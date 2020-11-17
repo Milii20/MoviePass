@@ -9,75 +9,81 @@ namespace DAODB;
 
 abstract class DAODB
 {
-    private abstract static function getDatabase();
-    private Abstract static function fromArray($arrayAux);
-    private Abstract static function getArrayType(); //nueva funcion, array clave valor que especifica el tipo (varchar, char, int, long, etc), junto con el nombre (id integer)
-    public static function createTable()
+    abstract protected function getDatabase();
+    Abstract protected function fromArray($arrayAux);
+    Abstract protected function getArrayType(); //nueva funcion, array clave valor que especifica el tipo (varchar, char, int, long, etc), junto con el nombre (id integer)
+    public function __construct()
     {
-        DBGen::createTable(self::getDatabase(),self::getArrayType());
+        $this->createTable();   //de esta manera, cada vez que quiero usar la DAO me fijo si la tabla existe
     }
-    public static function addWithId(iGuardable $objeto) //busca la id, y despues llama a agregar
+    public function createTable()
     {
-        $objeto->setId(self::giveId());   
-        self::add($objeto);
+        DBGen::createTable($this->getDatabase(),$this->getArrayType());
     }
-    public static function add(iGuardable $objeto)
+    public function addWithId(iGuardable $objeto) //busca la id, y despues llama a agregar
     {
-        DBGen::addOne(self::getDatabase(), $objeto->toArray());
+        //$objeto->setId($this->giveId());  Desactivado para que la DB se encargue   
+        $this->add($objeto);
     }
-    public static function giveId() //sobreescribe la subclase
+    public function add(iGuardable $objeto)
     {
-        return DBGen::getNewId(self::getDatabase());
+        DBGen::addOneWithId($this->getDatabase(), $objeto->toArray());
     }
-    public static function getAll() //trae todos los de un tipo
+    public function giveId() //sobreescribe la subclase
     {
-        $res = DBGen::getAll(self::getDatabase());
+        return DBGen::getNewId($this->getDatabase());
+    }
+    public function getAll() //trae todos los de un tipo
+    {
+
+        $res = DBGen::getAll($this->getDatabase());
         $arrayRes = array();
         foreach ($res as $array)
         {
-            array_push($arrayRes, self::fromArray($array));
-        }
-        return $arrayObj;
-    }
-    public static function getManyWithCheck($check, $value) //trae todos los de un tipo que cumplan una condicion
-    {                                                 //CHECK Y VALUE SON ARRAYS
-        $arrayRes = array();
-        foreach(DBGen::getWithCheck(self::getDatabase(),$check, $value) as $objeto)
-        {
-            array_push($arrayRes, self::fromArray($objeto));
+            array_push($arrayRes, $this->fromArray($array));
         }
         return $arrayRes;
     }
-    public static function getOneWithCheck($check, $value) //trae Uno los de un tipo que cumplan una condicion
+    public function getManyWithCheck($check, $value) //trae todos los de un tipo que cumplan una condicion
     {                                                 //CHECK Y VALUE SON ARRAYS
-        foreach(DBGen::getWithCheck(self::getDatabase(),$check, $value) as $objeto)
+        $arrayRes = array();
+        foreach(DBGen::getWithCheck($this->getDatabase(),$check, $value) as $objeto)
         {
-            $result = self::fromArray($objeto);
+            array_push($arrayRes, $this->fromArray($objeto));
+        }
+        return $arrayRes;
+    }
+    public function getOneWithCheck($check, $value) //trae Uno los de un tipo que cumplan una condicion
+    {           
+        $result=null;                                      //CHECK Y VALUE SON ARRAYS
+        foreach(DBGen::getWithCheck($this->getDatabase(),$check, $value) as $objeto)
+        {
+            $result = $this->fromArray($objeto);
         }
         return $result;
     }
-    public static function getOneById($id) //TODOS TIENEN ID ASI QUE TA TODO BIEN
+    public function getOneById($id) //TODOS TIENEN ID ASI QUE TA TODO BIEN
     {   
-        return self::getOneWithCheck(array('id'),array($id));
+        return $this->getOneWithCheck(array('id'),array($id));
     }
     //public function getOne($check, $value); //trae 1 que cumpla la condicion, lo mismo de la de arriba
-    public static function modify(iGuardable $objeto) //sabe que existe, por lo que lo busca y sobreescribe
+    public function modify(iGuardable $objeto) //sabe que existe, por lo que lo busca y sobreescribe
     {
-        $found = self::getOneById($objeto->getId());
+        $found = $this->getOneById($objeto->getId());
         if ($found!=null)
             {
-                DBGen::updateOne(self::getDatabase(), array('id'),array($objeto->getId()), $objeto->toArrayParam(), $objeto->toArrayValue()); 
+                DBGen::updateOne($this->getDatabase(), array('id'),array($objeto->getId()), $objeto->toArrayParam(), $objeto->toArrayValue()); 
             }
     }
-    public static function delete($id)  //busca por ID, para eliminar encadenado se basa en parametros DB foreign key
+    public function delete($id)  //busca por ID, para eliminar encadenado se basa en parametros DB foreign key
     //eliminar encadenado, elimina el cine,  elimina todos los cinemas y todas las funciones de cada cinema
     {
-            
-            DBGen::deleteOne(self::getDatabase(), array('id'), $id); //lo busca por id, y lo elimina
+
+            DBGen::deleteOne($this->getDatabase(), array('id'), array($id)); //lo busca por id, y lo elimina
     }
-    public static function deleteWithCheck($check, $value) //CHECK Y VALUE SON ARRAYS!
+    public function deleteWithCheck($check, $value) //CHECK Y VALUE SON ARRAYS!
     {
-        DBGen::deleteOne(self::getDatabase(), $check, $value); //lo busca por check = value, y lo elimina
+        DBGen::deleteOne($this->getDatabase(), $check, $value); //lo busca por check = value, y lo elimina
     }
 }
 ?>

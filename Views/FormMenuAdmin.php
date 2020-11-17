@@ -1,6 +1,8 @@
 <?php
 //muestra las opciones que tiene un admin en su panel de control 
 
+//require_once(VIEWS_PATH."validate-session.php");
+//require_once(VIEWS_PATH."message.php");
 ?>
 <div class=menuprincipal>
 <br>
