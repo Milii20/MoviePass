@@ -72,13 +72,11 @@ Class ClientController
     {
         $listaPelis=array();
         $listaCinema=array();
+        $funcionDAO = new FuncionDAO();
         $generodao = new GeneroDAO();
         $generos = $generodao->getAll();
-        if($listaFiltrada==null)
-        {
-            $listaFunciones=$this->cineDAO->getFuncionDisponible();
-        }
-        else
+        $listaFunciones=$this->funcionDAO->getFuncionesDisponibles();
+        if($listaFiltrada!=null)
         {
             $listaFunciones=$listaFiltrada;
         }
@@ -131,7 +129,7 @@ Class ClientController
         }
         $funcion->setArrayAsientosFromJson(json_encode($arrayAsientos, JSON_PRETTY_PRINT));
         $qrs=implode(",",$arrayQr);
-        QR::enviarMail($_SESSION['loggedUser']->getMail(),"Entradas Adquiridas",$qrs,5);
+        QR::enviarMail($_SESSION['loggedUser']->getEmail(),"Entradas Adquiridas",$qrs,5);
         $this->funcionDAO->modify($funcion);
         
         //return $arrayAsientos;
@@ -176,21 +174,23 @@ Class ClientController
         $listafunciones = $funciondao->getFuncionesByIdClienteAsiento($_SESSION['loggedUser']->getId());
         $listacinemas = array();
         $listacines=array();
-        foreach ($listafunciones as $funcion)
+        foreach ($listafunciones as $funcion)//cada funcion con su cinema
         {
             $cinema=$cinemadao->getOneById($funcion->getIdCinema());
             $cinema->setArrayFunciones($arrayVacio);
-            if (!in_array($cinema,$listacinemas))
+            if (!in_array($cinema,$listacinemas))   
             {
+                //echo "<br>agregando cinema id: ".$cinema->getId()." por la id de funcion ".$funcion->getId();
                 array_push($listacinemas,$cinema);
             }
         }
-        foreach ($listacinemas as $cinema)
+        foreach ($listacinemas as $cinema)//cada cinema con su cine
         {
             $cine = $cinedao->getOneById($cinema->getidCine());
             $cine->setArrayCinemas($arrayVacio);
-            if (!in_array($cine,$listacines))
+            if (!in_array($cine,$listacines))   
             {
+                //echo "<br>agregando cine id: ".$cine->getId()." por la id de cinema ".$cinema->getId();
                 array_push($listacines,$cine);
             }
         }
@@ -198,20 +198,28 @@ Class ClientController
         {
             foreach ($listacinemas as $cinema)
             {
-                foreach ($listafunciones as $funcion)
+                foreach ($listafunciones as $funcion)   
                 {
                     if ($funcion->getIdCinema()==$cinema->getId())
                     {
+                        if (!in_array($funcion,$cinema->getArrayFunciones()))  //si no esta en el array lo agrego 
+                        {
                         $arrayAux=$cinema->getArrayFunciones();
                         array_push($arrayAux,$funcion);
                         $cinema->setArrayFunciones($arrayAux);
+                        //echo "<br>UNIENDO cinema id: ".$cinema->getId()." por la id de funcion ".$funcion->getId();
+                        }
                     }
                 }
                 if ($cinema->getIdCine()==$cine->getId())
                 {
+                    if (!in_array($cinema,$cine->getArrayCinemas()))  //si no esta en el array lo agrego 
+                    {
                     $arrayAux=$cine->getArrayCinemas();
                     array_push($arrayAux,$cinema);
                     $cine->setArrayCinemas($arrayAux);
+                    //echo "<br>UNIENDO cine id: ".$cine->getId()." por la id de cinema ".$cinema->getId();
+                    }
                 }
             }
             

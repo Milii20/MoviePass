@@ -269,20 +269,20 @@ class calendar
     }
     public static function comparaDias($fecha1,$fecha2) //true = son el mismo dia, false = no son iguales
     {
-        $array1=explode(".",$fecha1); //como esta d.m.y.h.m por lo que d = 0, m = 1, y = 2, hora = 3, min = 4
+        $array1=explode(".",$fecha1); //como esta d.m.y por lo que d = 0, m = 1, y = 2
         $array2=explode(".",$fecha2);
         $res = false;
-        if ($array1[2]!=$array2[2]) //el anio es anterior, por ende fecha 2 > fecha 1
+        if ($array1[2]!=$array2[2]) //el anio 
         {
             $res=false; // no paso
             //echo "0 fecha 2 > fecha 1";
         }
-        elseif ($array1[1]!=$array2[1]) //el anio es posterior, por ende, fecha 2 < fecha 1
+        elseif ($array1[1]!=$array2[1]) //el mes
         {
             $res=false; //ya paso
             //echo "0 fecha 2 < fecha 1";
         }
-        elseif ($array1[0]!=$array2[0]) //si estan en el mismo anio y el mes es anterior, ya paso, por ende fecha 2 > fecha 1
+        elseif ($array1[0]!=$array2[0]) //el dia
         {
             $res=false; // no paso
             //echo "1 fecha 2 > fecha 1";
@@ -291,6 +291,7 @@ class calendar
         {
             $res=true;
         }
+        return $res;
     }
     
     public static function day()

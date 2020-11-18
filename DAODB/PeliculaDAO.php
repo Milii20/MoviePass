@@ -71,7 +71,7 @@ class PeliculaDAO extends DAODB
                         }
                 }
                 
-            echo "<br> los generos son: ".$res;
+            //echo "<br> los generos son: ".$res;
             $peli->setGenreIds($res);
             $generoDAO=new GeneroDAO();
             $arrayGeneros= $generoDAO->getAll();

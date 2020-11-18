@@ -65,26 +65,7 @@ namespace DAODB;
             $cinemadao->deleteCinemasByIdCine($id);
         }
         
-        public function getFuncionDisponible() //puede traer muchos
-        {
-            $funciondao = new FuncionDAO();
-            $arrayFunciones=array();
-            foreach(DBGen::getAll(FUNCIONTABLE) as $funcion)
-            {
-                
-                //foreach($func as $funcion)
-                {
-                    $func = $funciondao->fromArray($funcion);
-                   if (calendar::ComparaFechas($func->getFecha(),date('d.m.y')))
-                    {
-                        array_push($arrayFunciones,$func);
-                    }
-                }
-                
-            }
-            return $arrayFunciones;
-        
-        }       
+              
 /* DEBUG VERIFICAR QUE ESTO NO SEA NECESARIO
         
         

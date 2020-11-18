@@ -11,7 +11,7 @@ class QR
         return $image;
     }
     
-    public function enviarMail($destino,$titulo,$mensaje,$reintentos)
+    public static function enviarMail($destino,$titulo,$mensaje,$reintentos)
     {
         if (!mail( $destino , $titulo , $mensaje ))
         {

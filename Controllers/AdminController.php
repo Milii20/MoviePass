@@ -133,7 +133,7 @@ Class AdminController
         {
             $peli=$pelidao->desdeArray($this->movieDB->getById($array[0]));
             $pelidao->add($peli);
-            echo "agregada la peli ".$peli->getId();
+            //echo "agregada la peli ".$peli->getId();
         }
         $funcion->setPelicula($peli);
         $funcion->setHora($hora.":".$minuto);
@@ -180,7 +180,7 @@ Class AdminController
                     foreach ($cinema->getArrayFunciones() as $funcion)
                     {
                         if  ($funcion->getPelicula()->getId()==$funcionAVerificar->getPelicula()->getId())    //si son la misma peli
-                            if(Calendar::comparaFechas($funcion->getFecha(),$funcionAVerificar->getFecha())) //misma fecha
+                            if(Calendar::comparaDias($funcion->getFecha(),$funcionAVerificar->getFecha())) //misma fecha
                                 if  ($cinema->getIdCine()!=$idcine)                                 //en distinto cine
                                 {
                                     $res = 1;

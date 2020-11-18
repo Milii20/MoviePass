@@ -87,6 +87,19 @@ namespace DAODB;
                 $this->delete($funciones->getId());
             }
         }
+        public function getFuncionesDisponibles() //puede traer muchos
+        {
+            $arrayFunciones=array();
+            foreach($this->getAll() as $func)
+            {
+                    if (calendar::ComparaFechas($func->getFecha(),date('d.m.Y')))
+                    {
+                        array_push($arrayFunciones,$func);
+                    }
+            }
+            return $arrayFunciones;
+        
+        } 
     }
 
 ?>
