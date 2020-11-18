@@ -43,7 +43,7 @@ if(!empty($listacines))
                     {
                         echo "<div class=miniqr>";
                         echo "Asiento: ".$asiento;
-                        echo $this->generateQrEntrada($funci->getId().",".$asiento);
+                        echo $this->generateQrEntrada($_SESSION['loggedUser']->getId().",".$funci->getId().",".$asiento);
                         echo "<br>";
                         echo "</div>";
                     }

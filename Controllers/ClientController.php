@@ -124,7 +124,7 @@ Class ClientController
                 if ($asiento === $sel)   //tiene que ser triple igual o sino asigna valores como 4 y 40 como si fueran la misma persona
                 {
                     $arrayAsientos[$asiento]=$_SESSION['loggedUser']->getId();
-                    array_push($arrayQr,QR::generate(100,$_SESSION['loggedUser']->getId().",".$asiento));
+                    array_push($arrayQr,QR::generate(100,$_SESSION['loggedUser']->getId().",".$idFuncion.",".$asiento));
                 }
             }
             
