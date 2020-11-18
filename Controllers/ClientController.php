@@ -72,6 +72,8 @@ Class ClientController
     {
         $listaPelis=array();
         $listaCinema=array();
+        $generodao = new GeneroDAO();
+        $generos = $generodao->getAll();
         if($listaFiltrada==null)
         {
             $listaFunciones=$this->cineDAO->getFuncionDisponible();
@@ -114,19 +116,24 @@ Class ClientController
         $funcion=$this->funcionDAO->getFuncionById($idFuncion);
         $arrayAsientos = $funcion->getArrayAsientos();
         $selec = explode(",",$seleccionados);
+        $arrayQr = array();
         foreach($arrayAsientos as $asiento => $value)
         {
             foreach ($selec as $sel)
             {
-                if ($asiento == $sel)
+                if ($asiento === $sel)   //tiene que ser triple igual o sino asigna valores como 4 y 40 como si fueran la misma persona
                 {
                     $arrayAsientos[$asiento]=$_SESSION['loggedUser']->getId();
+                    array_push($arrayQr,QR::generate(100,$_SESSION['loggedUser']->getId().",".$asiento));
                 }
             }
             
         }
         $funcion->setArrayAsientosFromJson(json_encode($arrayAsientos, JSON_PRETTY_PRINT));
+        $qrs=implode(",",$arrayQr);
+        QR::enviarMail($_SESSION['loggedUser']->getMail(),"Entradas Adquiridas",$qrs,5);
         $this->funcionDAO->modify($funcion);
+        
         //return $arrayAsientos;
     }
     public function SeleccionadosAsientos($id, $sel=null)
@@ -227,6 +234,30 @@ Class ClientController
         }
         $this->showVerFuncionesDisponibles($listaFiltrada);
     }
+    public function filtrarPelisPorGenero($genero)
+    {
+        $listaFiltrada=array();
+        $listaFunciones=$this->cineDAO->getFuncionDisponible();
+        if ($genero ==0) //todas
+        {
+            $listaFiltrada==$listaFunciones;
+        }
+        else
+        {
+
+            foreach ($listaFunciones as $funcion)
+            {
+                foreach ($funcion->getPelicula()->getArrayGeneros() as $g)
+                {
+                    if ($g->getId()==$genero)
+                    {
+                        array_push($listaFiltrada,$funcion);
+                    }
+                }
+            }
+        }
+        $this->showVerFuncionesDisponibles($listaFiltrada);
+    }
     public function generateQrEntrada($mensaje)
     {
         return $this->generarCodigoQRChiquito($mensaje);
@@ -247,7 +278,7 @@ Class ClientController
             require_once(VIEWS_PATH."FormCheckOut.php");
         }
         else{
-            $this->message="Tarjeta Validada, disfrute su compra!";
+            $this->message="Tarjeta Validada, disfrute su compra!. Un mail sera enviado a la brevedad con las entradas adquiridas!";
             // por ahora no es necesaria ya que los asigno cuando los selecciona
             //pero luego la usare
             $this->asignarAsientos($idFuncion,$seleccionados);

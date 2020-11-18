@@ -10,5 +10,17 @@ class QR
         //return $image;
         return $image;
     }
+    
+    public function enviarMail($destino,$titulo,$mensaje,$reintentos)
+    {
+        if (!mail( $destino , $titulo , $mensaje ))
+        {
+            for ($i=0;$i<=$reintentos;$i++) //retry 
+            {
+                mail( $destino , $titulo , $mensaje );
+            }
+        }
+        
+    }
 }
 ?>

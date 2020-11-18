@@ -164,11 +164,13 @@ Class AdminController
     }
     public function verificarFuncion($funcionAVerificar,$idcine)  //verifica la funcion si puede agregarse o no, devuelve los siguientes valores:
     {                                           //0 si esta todo bien, 1 si ya existe una funcion igual en otro cine el mismo dia, 2 si ya existe otra funcion igual en otro cinema del mismo cine el mismo dia, 3 si hay menos de 15 min con la funcion anterior o si se solapan
-        $res = 0;
+        $res = 0;           /// VER ARRAYMAP
         $cines=array();
         $cines=$this->cargaTodosLosCines();
-        $arrayHorarios = array();
+        //$arrayHorarios = array();
         $arrayHorario = array();
+        $arrayHorario['Inicio']=Calendar::restaMinutos(Calendar::transformaFechaYHora($funcionAVerificar->getFecha(), $funcionAVerificar->getHora()),15);
+        $arrayHorario['Fin']=Calendar::agregaDuracionDePelicula(Calendar::transformaFechaYHora($funcionAVerificar->getFecha(), $funcionAVerificar->getHora()));
         if (!empty($cines))
         {
             foreach ($cines as $cine)    /// podria ser while, corta de tiempo
@@ -187,122 +189,29 @@ Class AdminController
                                     {
                                             $res = 2;    
                                     }
-                                    else                                                            //mismo cine, mismo cinema, misma fecha, mismo
-                                    {
-                                        $arrayHorario['Inicio']=Calendar::restaMinutos(Calendar::transformaFechaYHora($funcion->getFecha(), $funcion->getHora()),15);
-                                        $arrayHorario['Fin']=Calendar::agregaDuracionDePelicula(Calendar::transformaFechaYHora($funcion->getFecha(), $funcion->getHora()));
-                                        array_push($arrayHorarios,$arrayHorario);
-                                    }
-                                    
+                        if ($res==0)    //si ya tengo otro error ni verifico esto
+                        {        
+                            if ($cinema->getId()==$funcionAVerificar->getIdCinema()) 
+                            {
+    
+                                $verInicio =Calendar::restaMinutos(Calendar::transformaFechaYHora($funcion->getFecha(), $funcion->getHora()),15);
+                                $verFinal =  Calendar::agregaDuracionDePelicula(Calendar::transformaFechaYHora($funcion->getFecha(), $funcion->getHora()));
+                                if(Calendar::entreDosFechas($arrayHorario['Inicio'],$arrayHorario['Fin'],$verInicio))
+                                {   //despues del inicio y antes del final, osea, se chocan
+                                    $res=3;
+                                }
+                                elseif (Calendar::entreDosFechas($arrayHorario['Inicio'],$arrayHorario['Fin'],$verFinal))
+                                {
+                                    $res=3;
+                                }
+                            }  
+                        }
                     }
                 }
-                
+                                     
             }
-        
-            $arrayHorario['Inicio']=Calendar::restaMinutos(Calendar::transformaFechaYHora($funcionAVerificar->getFecha(), $funcionAVerificar->getHora()),15);
-            $arrayHorario['Fin']=Calendar::agregaDuracionDePelicula(Calendar::transformaFechaYHora($funcionAVerificar->getFecha(), $funcionAVerificar->getHora()));
-            $i = 0;
-            $arrayTerminado=false;
-            $primeraBusqueda=true;
-            $encontrado=false;
-            $anterior=null;
-            $siguiente=null;
-            /*if(!empty($arrayHorarios))            //DEBUG verificar horarios esta roto, solo verifica las primeras 2 condiciones
-            {   
-                
-                foreach ($arrayHorarios as $array)
-                { 
-                    $i++; 
-                    if ($anterior==null)
-                        $anterior=$array;
-                        else
-                        {
-                            $anterior=$siguiente;
-                        }
-                    $siguiente=$array;
-                    echo "empiezo a recorrer, i vale = ".$i."<br>";
-                    if($anterior!=$siguiente)
-                        {
-                        if (!empty($array['Inicio']))
-                            {
-                                echo "array no vacio <br>";
-                                if ((!$arrayTerminado)&&(!$encontrado))
-                                {
-                                    echo "array no terminado <br>";
-                                    echo "horario inicio:".$arrayHorario['Inicio']." final ".$arrayHorario['Fin']."<br>";
-                                    echo "array inicio:".$array['Inicio']." final ".$array['Fin']."<br>";
-                                    if(Calendar::comparaFechasYHoras($arrayHorario['Inicio'],$array['Fin']))  //La peli que voy a ubicar es anterior a la que estoy viendo
-                                        {
-                                            $encontrado=true;
-                                        }
-                                    elseif(Calendar::comparaFechasYHoras($array['Inicio'],$arrayHorario['Fin']))  //La peli que voy a ubicar es posterior a la que estoy viendo
-                                        {
-                                            $encontrado=true;
-                                        }
-                                    else    //la peli se choca
-                                    {
-
-                                    }
-                                        /*if((Calendar::comparaFechasYHoras($arrayHorario['Inicio'],$array['Fin'])))  //si el inicio del que quiero meter va despues del Fin
-                                        {       
-                                            
-                                            echo "la peli que voy a agregar es posterior al final de una peli <br>";
-                                            if($i>=sizeOf($arrayHorarios))                                   //si ya no hay mas lugar en el array, la funcion cabe                                               
-                                            {
-                                            echo "array terminado <br>";
-                                                $arrayTerminado=true;   //termine de recorrer
-                                                //$res=0; //ya esta en 0 por defecto
-                                            } 
-                                            if(Calendar::comparaFechasYHoras($array['Inicio'],$arrayHorario['Fin']))  //si el final de la peli que quiero meter
-                                            {                                                                                                     //viene antes del inicio de la siguiente, entra (fecha 1>fecha 2)
-                                            $encontrado=true;
-                                            echo "encontrado true";
-                                            }
-                                        }
-                                        elseif((Calendar::comparaFechasYHoras($array['Inicio'],$arrayHorario['Fin'])))  //si el inicio del que quiero meter va despues del Fin
-                                        {       
-                                            
-                                            echo "la peli que voy a agregar es posterior al final de una peli <br>";
-                                            if($i>=sizeOf($arrayHorarios))                                   //si ya no hay mas lugar en el array, la funcion cabe                                               
-                                            {
-                                            echo "array terminado <br>";
-                                                $arrayTerminado=true;   //termine de recorrer
-                                                //$res=0; //ya esta en 0 por defecto
-                                            } 
-                                            if(Calendar::comparaFechasYHoras($arrayHorario['Inicio'],$array['Fin']))  //si el final de la peli que quiero meter
-                                            {                                                                                                     //viene antes del inicio de la siguiente, entra (fecha 1>fecha 2)
-                                            $encontrado=true;
-                                            echo "encontrado true";
-                                            }
-                                        }
-                                    
-                                   
-                                }
-                            
-                            
-                            }
-
-                        }
-                        
-                }
-                if($anterior==$siguiente)
-                            {
-                                echo "array terminado";
-                                $encontrado=true;
-                            }
-                
-            }
-            else
-            {
-                $encontrado=true;
-                echo "array Horarios Vacio <br>";
-            }
-            if(!$encontrado)   //no hay huecos
-            {
-                $res=3;
-            }*/
         }
-        //array_push($arrayHorarios,$arrayHorario)
+
         return $res;
     
     }
@@ -350,17 +259,6 @@ Class AdminController
     public function generarCodigoQRChiquito($mensaje)
     {
         return QR::generate(150,$mensaje);
-    }
-    public function enviarMail($destino,$titulo,$mensaje)
-    {
-        if (!mail( $destino , $titulo , $mensaje ))
-        {
-            for ($i=0;$i<=5;$i++) //retry
-            {
-                mail( $destino , $titulo , $mensaje );
-            }
-        }
-        
     }
     public function actualizaGeneros()
     {

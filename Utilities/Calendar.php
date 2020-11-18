@@ -3,6 +3,15 @@ namespace Utilities;
 
 class calendar
 {
+    public static function entreDosFechas($fecha1,$fecha2, $fechaVerificar) //true = fechaVerificar>fecha 1 y < fecha 2
+    {
+        $res = false;
+        if (self::comparaFechasYHoras($fechaVerificar, $fecha1))    //posterior a fecha 1
+            if(self::comparaFechasYHoras($fecha2, $fechaVerificar)) //anterior a fecha2
+                $res = true;
+        return $res;
+        
+    }
     public static function comparaFechasYHoras($fecha1, $fecha2) //true = ya paso (fecha 1 > fecha 2) false = no paso (fecha 1 < fecha 2)
     {
         $array1=explode(".",$fecha1); //como esta d.m.y.h.m por lo que d = 0, m = 1, y = 2, hora = 3, min = 4

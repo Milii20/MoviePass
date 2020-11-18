@@ -99,7 +99,7 @@
             if ($this->userDAO->GetByEmail($email)==null) //en otras palabras, si no existe
             {
                 $this->userDAO->addWithId($user);
-                $this->message= "Usuario Creado con Exito! Loggeate con tu Email y Contraseña para continuar". $user->getFecha();
+                $this->message= "Usuario Creado con Exito! Loggeate con tu Email y Contraseña para continuar";
                 $this->Index();
             }
             else

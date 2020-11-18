@@ -163,8 +163,24 @@ Class moviedb
     }
     public function getById($id)
     {
-        $response = json_decode(file_get_contents('https://api.themoviedb.org/3/movie/'.$id.'?api_key='.KEY.'&language=en-US'),true);
-        return $this->filterAttrib($response);        
+        $peli = json_decode(file_get_contents('https://api.themoviedb.org/3/movie/'.$id.'?api_key='.KEY.'&language=es-ES'),true);
+        
+        $newPeli= $this->filterAttrib($peli);
+        $newPeli["genre_ids"] = array();
+               
+        foreach ($peli["genres"] as $arr)  
+        foreach ($arr as $clave => $valor)          //trato los generos diferente....
+            {
+                //echo "<br>la clave es: ".$valor;
+                if (strcmp($clave,"id")==0)
+                {
+
+                    array_push($newPeli["genre_ids"],$valor);
+                }
+                
+            } 
+        
+        return $newPeli;    
     }
     public function filterAttrib($peli)
     {
@@ -182,9 +198,15 @@ Class moviedb
                 $newPeli[$key]= $genre;
             }
             else }*/{
+                
                 $newPeli[$key]= $peli[$key];
             }
-        
+            /*foreach ($peli as $clave => $valor)
+            {
+                ;echo "<br> clave de la peli: ".$clave;echo "<br> valor de la peli: ".$valor;
+
+            }*/
+            
         $portra=$this->getPortrait($newPeli);
         
         $newPeli["image"]=$portra;

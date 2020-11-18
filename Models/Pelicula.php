@@ -63,8 +63,9 @@ Class Pelicula implements iGuardable
     {
         $this->genreIds=$genres;
     }
-    public function getArrayGeneros($array)
+    public function getArrayGeneros()
     {
+       
         return $this->arrayGeneros;
     }
     public function setArrayGeneros($array)
@@ -89,8 +90,8 @@ Class Pelicula implements iGuardable
         $arrayAux['title'] = $this->getTitle();
         $arrayAux['overview'] = $this->getOverview();
         $arrayAux['releasedate'] = $this->getReleaseDate();
-       // $arrayAux['genreids'] = $this->getGenreIds();
         $arrayAux['image']=$this->getImage();
+        $arrayAux['genre_ids'] = $this->getGenreIds();
         return $arrayAux;
     }
     public function toArrayParam()
@@ -101,8 +102,8 @@ Class Pelicula implements iGuardable
         array_push($arrayAux, "title");
         array_push($arrayAux, "overview");
         array_push($arrayAux, "releasedate");
-        //array_push($arrayAux, "genreids");
         array_push($arrayAux, "image");
+        array_push($arrayAux, "genre_ids");
         return $arrayAux;
     }
     public function toArrayValue()
@@ -114,7 +115,7 @@ Class Pelicula implements iGuardable
         array_push($arrayAux, $this->getOverview());
         array_push($arrayAux, $this->getReleaseDate());
         array_push($arrayAux, $this->getImage());
-        //array_push($arrayAux, $this->getgenreIds());
+        array_push($arrayAux, $this->getgenreIds());
         return $arrayAux;        
     }
 

@@ -24,11 +24,11 @@ class PeliculaDAO extends DAODB
             $peli->setOverview($arrayAux['overview']);
             $peli->setReleaseDate($arrayAux['releasedate']);
             $peli->setImage($arrayAux['image']);
-            /*$peli->setGenreIds($arrayAux['genreids']);
+            $peli->setGenreIds($arrayAux['genre_ids']);
             $generoDAO=new GeneroDAO();
             $arrayGeneros= $generoDAO->getAll();
             $generos=array();
-            $generos=explode($peli->getGenreIds(),",");
+            $generos=explode(",",$peli->getGenreIds());
             $arrayGen= array();
             foreach ($generos as $generoIncluido)   //este es un array id1,id2,id3,etc
             {
@@ -40,7 +40,7 @@ class PeliculaDAO extends DAODB
                     }
                 }
             }
-            $peli->setArrayGeneros($arrayGen);   */        
+            $peli->setArrayGeneros($arrayGen);           
         }         
         return $peli;
     }
@@ -56,15 +56,12 @@ class PeliculaDAO extends DAODB
             $peli->setOverview($arrayAux['overview']);
             $peli->setReleaseDate($arrayAux['release_date']);
             $peli->setImage($arrayAux['image']);
-            /*$auxgen=$arrayAux['genres'];
+            $auxgen=$arrayAux['genre_ids'];
             $res = "";
-            foreach ($auxgen as $gene)
-            {
-                foreach ($gene as $clave => $valor)
+            foreach ($auxgen as $valor)
                 {
-                    if(strcasecmp($clave,"id"))
-                    {
-                        if(strcasecmp($res,""))
+                 
+                        if(strcasecmp($res,"")==0)
                         {
                             $res=$valor;
                         }
@@ -72,9 +69,9 @@ class PeliculaDAO extends DAODB
                         {
                             $res=$res.",".$valor;
                         }
-                    }
                 }
-            }
+                
+            echo "<br> los generos son: ".$res;
             $peli->setGenreIds($res);
             $generoDAO=new GeneroDAO();
             $arrayGeneros= $generoDAO->getAll();
@@ -91,7 +88,7 @@ class PeliculaDAO extends DAODB
                     }
                 }
             }
-            $peli->setArrayGeneros($arrayGen);     */      
+            $peli->setArrayGeneros($arrayGen);           
         }         
         return $peli;
     }
@@ -104,6 +101,7 @@ class PeliculaDAO extends DAODB
         $arrayAux['overview'] = "VARCHAR (500)";
         $arrayAux['releasedate'] = "VARCHAR (500)";
         $arrayAux['image'] = "VARCHAR (500)";
+        $arrayAux['genre_ids'] = "VARCHAR (500)";
         $arrayAux['CONSTRAINT pk_cinema'] = "PRIMARY KEY (id)";    
         return $arrayAux;
     }

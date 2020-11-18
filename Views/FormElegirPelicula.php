@@ -5,9 +5,7 @@
 <?php
     require_once(VIEWS_PATH."validate-session.php");
 require_once(VIEWS_PATH."message.php");$i=0;
-if(!empty($listaPelis))
-{
-    echo "<div class=promoCine>";
+echo "<div class=promoCine>";
     echo "Promociones Vigentes: <br>";
     echo "Con tu compra de 2 entradas o mas los dias Martes y Miercoles ";
     echo "obtendras un 25% de descuento!";
@@ -74,13 +72,23 @@ if(!empty($listaPelis))
             echo "</select>";
     echo '<button  type="submit" name="btnLogin">Filtrar Peliculas por Fecha</button>';
     echo '</form>';  
-    echo "</div>";/*
+    echo "</div>";
     echo "<div class=filtro2>";
     echo '<form action='.FRONT_ROOT.'Client/filtrarPelisPorGenero  method="post">';
+    echo 'Genero a Filtrar:<select name="genero">';
+    foreach ($generos as $gen)
+    {
+        echo '<option value='.$gen->getId().'>'.$gen->getNombre().'</option>';
+    }
+    echo '<option selected value="0">Todas</option>';
+    echo "</select>";
     echo '<button  type="submit" name="btnLogin">Filtrar Peliculas por Genero</button>';
     echo '</form>'; 
-    echo "</div>";*/ 
+    echo "</div>"; 
     echo "</div>";
+if(!empty($listaPelis))
+{
+    
     $i=0;
     foreach ($listaPelis as $peli)
     {
