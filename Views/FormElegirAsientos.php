@@ -20,8 +20,10 @@ if (!empty($funcion->getArrayAsientos()))
     echo '<form action='.FRONT_ROOT.'Client/SeleccionadosAsientos  method="post">';
    
     echo '<table border="1">';
+    $cantContada=0;
     foreach($funcion->getArrayAsientos() as $clave => $value)
     {
+            $cantContada++;
             //echo "<tr>";
             $arrayIdAsiento=explode(".",$clave);
             if (!$abierto)
@@ -53,16 +55,22 @@ if (!empty($funcion->getArrayAsientos()))
                 $abierto=true;
                 echo "<tr>";
             }else*/
-            if ($arrayIdAsiento[1]==$cinema->getCantGentePorFila())
+            if ($arrayIdAsiento[1]==$cinema->getCantGentePorFila()) //si termine la fila
+            {
+                $abierto=false;
+                echo "</tr>";
+            }
+            
+            elseif ($cantContada==$cantTotal)   //si termine todo
             {
                 $abierto=false;
                 echo "</tr>";
             }
     
     }
-    if ($abierto==true)
+    if ($abierto==true) //si sali del ciclo, no hay mas asientos a crear, cierro la row
     {
-        echo "<tr>";
+        echo "</tr>";
     }
     echo '<button  type="submit" name="btnLogin" value='.$funcion->getId().'>Termine de Seleccionar Asientos</button>';
     echo "</table>";        

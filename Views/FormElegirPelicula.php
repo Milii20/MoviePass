@@ -103,9 +103,9 @@ if(!empty($listaPelis))
         echo "<br>Fecha de Lanzamiento: ".$peli["release_date"];
         echo "<br>Fecha De la Funcion: ".$listaFunciones[$i]->getFecha();
         echo "<br>Horario De la Funcion: ".$listaFunciones[$i]->getHora();
-        echo "<br>Sala De la Funcion: <br> Direccion: ".$listaCinema->getDireccion();
-        echo "<br>Valor de la entrada $".$listaCinema->getValorEntrada();
-        echo "<br>Tipo de Sala ".$listaCinema->getTipoSala();
+        echo "<br>Sala De la Funcion: <br> Direccion: ".$listaCinema[$i]->getDireccion();
+        echo "<br>Valor de la entrada $".$listaCinema[$i]->getValorEntrada();
+        echo "<br>Tipo de Sala ".$listaCinema[$i]->getTipoSala();
         echo '<br><img src="https://image.tmdb.org/t/p/w500'.$peli["image"].'" height="400" width="300">';
         echo '<form action='.FRONT_ROOT.'Client/comprarEntradas  method="post">';
         echo '<button  type="submit" name="btnLogin" value='.$listaFunciones[$i]->getId().'>Comprar Entradas</button>';

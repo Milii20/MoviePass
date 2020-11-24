@@ -75,9 +75,23 @@ Class Funcion implements iGuardable
     public function generarArrayAsientos($cantAsientosPorFila,$capacidadTotal) //primer compromiso por tiempo: tanto fila como columna de asiento seran numeros, y empezaran de adelante a la izq, en vez de empezar desde el centro
     {
         $arrayAux=array();
+        $impar=false;
+        if (0!=($capacidadTotal % $cantAsientosPorFila))
+        {
+            $impar=true;
+        }
         for ($i=1;$i<=($capacidadTotal/$cantAsientosPorFila);$i++) //I es la fila, porque cantTotal/cantPorFila = cantFilas
         {
             for($j=1;$j<=$cantAsientosPorFila;$j++)
+            {
+                $arrayAux[$i.".".$j]=0; //de esta manera queda: 1.1, 1.2.... 1.12, 2.1, 2.2.... 12.12, tambien inicializa el asiento en 0 para mostrar que no esta ocupado
+            }
+        }
+        if ($impar) //si es impar, agrego la ultima fila
+        {   //como queda una sola fila, capacidad restante = resto de la division de la capacidad total dividido la cantidad de asientos por fila, por cantidad de asientos por fila
+            $capRestante = ($capacidadTotal % $cantAsientosPorFila);
+            //$i++;
+            for($j=1;$j<=$capRestante;$j++) //agrego los asientos faltantes)
             {
                 $arrayAux[$i.".".$j]=0; //de esta manera queda: 1.1, 1.2.... 1.12, 2.1, 2.2.... 12.12, tambien inicializa el asiento en 0 para mostrar que no esta ocupado
             }

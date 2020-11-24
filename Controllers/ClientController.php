@@ -84,7 +84,8 @@ Class ClientController
         {
         foreach($listaFunciones as $funcion)
         {
-            $listaCinema=$this->cinemaDAO->getCinemaById($funcion->getIdCinema());
+            $cinema=$this->cinemaDAO->getCinemaById($funcion->getIdCinema());
+            
             if(Calendar::comparaFechasYHoras(date("d.m.Y"),(Calendar::transformaFechaYHora($funcion->getFecha(),$funcion->getHora()))))
             {
                 //no la muestro, la ignoro porque ya paso la funcion
@@ -92,6 +93,8 @@ Class ClientController
             else
             {
                 array_push($listaPelis,$this->movieDB->getById($funcion->getIdPelicula()));
+
+                array_push($listaCinema, $cinema);
             }
         }
         require_once(VIEWS_PATH."FormElegirPelicula.php");
@@ -105,6 +108,7 @@ Class ClientController
         $funcion=$this->funcionDAO->getFuncionById($id);
         $idCliCli=$_SESSION['loggedUser']->getId();
         $cinema=$this->cinemaDAO->getCinemaById($funcion->getIdCinema());
+        $cantTotal=$cinema->getCapacidadTotal();
         require_once(VIEWS_PATH."FormElegirAsientos.php");
 
             
